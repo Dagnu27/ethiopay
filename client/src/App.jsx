@@ -10,6 +10,11 @@ function App() {
   return (
     <>
       <section id="center">
+        <div className="min-h-screen flex items-center justify-center">
+      <h1 className="text-5xl font-bold text-blue-600">
+        EthioPay
+      </h1>
+    </div>
         <div className="hero">
           <img src={heroImg} className="base" width="170" height="179" alt="" />
           <img src={reactLogo} className="framework" alt="React logo" />
