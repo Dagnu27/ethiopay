@@ -47,6 +47,21 @@ CREATE TABLE "bills" (
 );
 
 -- CreateTable
+CREATE TABLE "bill_payments" (
+    "id" TEXT NOT NULL,
+    "bill_id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "amount" DOUBLE PRECISION NOT NULL,
+    "fee" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "status" TEXT NOT NULL DEFAULT 'completed',
+    "reference" TEXT,
+    "paid_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "bill_payments_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "withdrawals" (
     "id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
@@ -88,6 +103,12 @@ ALTER TABLE "transactions" ADD CONSTRAINT "transactions_receiver_id_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "bills" ADD CONSTRAINT "bills_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "bill_payments" ADD CONSTRAINT "bill_payments_bill_id_fkey" FOREIGN KEY ("bill_id") REFERENCES "bills"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "bill_payments" ADD CONSTRAINT "bill_payments_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "withdrawals" ADD CONSTRAINT "withdrawals_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

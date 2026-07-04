@@ -24,6 +24,7 @@ model User {
   sentTransactions  Transaction[] @relation("Sender")
   receivedTransactions Transaction[] @relation("Receiver")
   bills           Bill[]
+  billPayments    BillPayment[]
   withdrawals     Withdrawal[]
   notifications   Notification[]
   
@@ -60,8 +61,26 @@ model Bill {
   createdAt     DateTime @default(now()) @map("created_at")
   
   user User @relation(fields: [userId], references: [id])
+  payments BillPayment[]
   
   @@map("bills")
+}
+
+model BillPayment {
+  id          String   @id @default(cuid())
+  billId      String   @map("bill_id")
+  userId      String   @map("user_id")
+  amount      Float
+  fee         Float    @default(0)
+  status      String   @default("completed")
+  reference   String?
+  paidAt      DateTime @default(now()) @map("paid_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  
+  bill Bill @relation(fields: [billId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+  
+  @@map("bill_payments")
 }
 
 model Withdrawal {
