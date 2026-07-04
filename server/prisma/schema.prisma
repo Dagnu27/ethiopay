@@ -35,6 +35,7 @@ model Transaction {
   senderId    String   @map("sender_id")
   receiverId  String   @map("receiver_id")
   amount      Float
+  fee         Float    @default(0)
   type        String
   status      String   @default("pending")
   description String?
