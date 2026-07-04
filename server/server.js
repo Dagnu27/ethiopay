@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
       auth: 'POST /api/auth/register, POST /api/auth/login, GET /api/auth/profile',
       transactions: 'POST /api/transactions/send, GET /api/transactions/history, GET /api/transactions/balance, GET /api/transactions/stats',
       bills: 'GET /api/bills, POST /api/bills/:billId/pay',
-      withdrawals: 'POST /api/withdrawals, GET /api/withdrawals'
+      withdrawals: 'POST /api/withdrawals, GET /api/withdrawals, PUT /api/withdrawals/:id/approve'
     }
   });
 });
@@ -63,7 +63,7 @@ app.get('/api/test-db', async (req, res) => {
   }
 });
 
-// Routes - ONLY ONCE EACH!
+// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/bills', billRoutes);
