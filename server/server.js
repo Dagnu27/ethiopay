@@ -7,8 +7,8 @@ const { PrismaClient } = require('@prisma/client');
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
-const billRoutes = require('./routes/billRoutes');  // ✅ ADD THIS
-const withdrawalRoutes = require('./routes/withdrawalRoutes');  // ✅ ADD THIS
+const billRoutes = require('./routes/billRoutes');
+const withdrawalRoutes = require('./routes/withdrawalRoutes');
 
 dotenv.config();
 
@@ -31,10 +31,9 @@ app.get('/', (req, res) => {
       testDatabase: 'GET /api/test-db',
       auth: 'POST /api/auth/register, POST /api/auth/login, GET /api/auth/profile',
       transactions: 'POST /api/transactions/send, GET /api/transactions/history, GET /api/transactions/balance, GET /api/transactions/stats',
-      bills: 'GET /api/bills, POST /api/bills/:billId/pay',  // ✅ ADD THIS
-      withdrawals: 'POST /api/withdrawals, GET /api/withdrawals'  // ✅ ADD THIS
-    },
-    documentation: 'Coming soon!'
+      bills: 'GET /api/bills, POST /api/bills/:billId/pay',
+      withdrawals: 'POST /api/withdrawals, GET /api/withdrawals'
+    }
   });
 });
 
@@ -64,11 +63,11 @@ app.get('/api/test-db', async (req, res) => {
   }
 });
 
-// Routes
+// Routes - ONLY ONCE EACH!
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
-app.use('/api/bills', billRoutes);  // ✅ ADD THIS
-app.use('/api/withdrawals', withdrawalRoutes);  // ✅ ADD THIS
+app.use('/api/bills', billRoutes);
+app.use('/api/withdrawals', withdrawalRoutes);
 
 // 404 handler
 app.use((req, res) => {
