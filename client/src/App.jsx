@@ -1,27 +1,49 @@
-// client/src/App.jsx
-import './index.css'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import './index.css';
+
+// Pages
+import Login from './pages/Login';
+import Register from './pages/Register';
+
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6128ff]"></div>
+      </div>
+    );
+  }
+  if (!user) return <Navigate to="/login" />;
+  return children;
+};
 
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl border border-gray-200 p-8 max-w-md w-full shadow-lg">
-        <h1 className="text-2xl font-bold text-[#6128ff] mb-2">
-          ✅ EthioPay
-        </h1>
-        <p className="text-gray-600 mb-6">
-          TailwindCSS is working!
-        </p>
-        <button className="btn-primary w-full">
-          Get Started
-        </button>
-        <div className="mt-4 flex gap-2">
-          <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-            Ready
-          </span>
-        </div>
-      </div>
-    </div>
-  )
+    <AuthProvider>
+      <BrowserRouter>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#363636',
+              color: '#fff',
+            },
+          }}
+        />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<Navigate to="/dashboard" />} />
+          {/* Protected routes will be added later */}
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
