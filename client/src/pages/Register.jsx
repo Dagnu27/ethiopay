@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import { 
   Eye, 
   EyeOff, 
-  CheckCircle, 
   Shield, 
   Zap, 
   ArrowRight,
@@ -12,7 +11,7 @@ import {
   Mail,
   User,
   Phone,
-  Check
+  Wallet
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -71,11 +70,9 @@ const Register = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     
-    // Validate on change
     const error = validateField(name, value);
     setErrors({ ...errors, [name]: error });
 
-    // Password strength
     if (name === 'password') {
       calculatePasswordStrength(value);
     }
@@ -109,7 +106,6 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate all fields
     const newErrors = {};
     Object.keys(formData).forEach(key => {
       const error = validateField(key, formData[key]);
@@ -118,12 +114,12 @@ const Register = () => {
     
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      toast.error('Please fix the errors before submitting');
+      toast.error('Please fix the errors');
       return;
     }
 
     if (!agreeTerms) {
-      toast.error('Please agree to the Terms and Conditions');
+      toast.error('Please agree to the Terms');
       return;
     }
 
@@ -144,85 +140,83 @@ const Register = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F5F7FA] p-4">
       <div 
-        className={`w-full max-w-6xl transition-all duration-1000 transform ${
+        className={`w-full max-w-5xl transition-all duration-1000 transform ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
         }`}
       >
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col lg:flex-row">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           
-          {/* LEFT SECTION - Branding */}
-          <div className="w-full lg:w-1/2 bg-white p-8 lg:p-12 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-2 mb-6">
-                <div className="w-8 h-8 bg-[#0B7A43] rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">E</span>
+          {/* LEFT CARD - Branding (Centered) */}
+          <div className="bg-white rounded-xl shadow-lg p-6 lg:p-8 flex flex-col items-center justify-center text-center border border-gray-100">
+            <div className="w-full max-w-xs">
+              {/* Logo with Wallet Icon */}
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <div className="w-10 h-10 bg-[#0B7A43] rounded-xl flex items-center justify-center">
+                  <Wallet className="w-5 h-5 text-white" />
                 </div>
                 <span className="text-xl font-bold text-[#0B7A43]">EthioPay</span>
               </div>
 
-              <h1 className="text-3xl lg:text-4xl font-bold text-[#0F172A] leading-tight mb-4">
+              <h1 className="text-2xl lg:text-3xl font-bold text-[#0F172A] leading-tight mb-3">
                 The Secure Bridge to <br />
                 <span className="text-[#0B7A43]">Ethiopia's Digital Gold.</span>
               </h1>
 
-              <p className="text-gray-600 text-sm lg:text-base mb-8 leading-relaxed">
-                Join thousands of users and businesses managing their wealth with the precision 
-                of modern fintech and the sturdiness of a traditional bank.
+              <p className="text-gray-600 text-sm mb-5 leading-relaxed">
+                Join thousands managing their wealth with modern fintech.
               </p>
 
-              <div className="space-y-4">
-                <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
-                  <div className="w-10 h-10 bg-[#0B7A43]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Shield className="w-5 h-5 text-[#0B7A43]" />
+              <div className="space-y-2 w-full">
+                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                  <div className="w-8 h-8 bg-[#0B7A43]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Shield className="w-4 h-4 text-[#0B7A43]" />
                   </div>
-                  <div>
-                    <p className="font-semibold text-[#0F172A]">Secure</p>
-                    <p className="text-sm text-gray-600">NIBE Standard Encryption</p>
+                  <div className="text-left">
+                    <p className="font-semibold text-[#0F172A] text-sm">Secure</p>
+                    <p className="text-xs text-gray-600">NIBE Standard Encryption</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
-                  <div className="w-10 h-10 bg-[#0B7A43]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Zap className="w-5 h-5 text-[#0B7A43]" />
+                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                  <div className="w-8 h-8 bg-[#0B7A43]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Zap className="w-4 h-4 text-[#0B7A43]" />
                   </div>
-                  <div>
-                    <p className="font-semibold text-[#0F172A]">Fast</p>
-                    <p className="text-sm text-gray-600">Instant Local Transfers</p>
+                  <div className="text-left">
+                    <p className="font-semibold text-[#0F172A] text-sm">Fast</p>
+                    <p className="text-xs text-gray-600">Instant Local Transfers</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-gray-100">
+            <div className="mt-6 pt-4 border-t border-gray-100 w-full">
               <p className="text-xs text-gray-400">
-                © 2024 EthioPay. Secured by National Bank of Ethiopia standards.
+                © 2026 EthioPay. Secured by National Bank.
               </p>
             </div>
           </div>
 
-          {/* RIGHT SECTION - Form */}
-          <div className="w-full lg:w-1/2 bg-white p-8 lg:p-12 lg:border-l border-gray-100">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-[#0F172A]">Create Account</h2>
-              <p className="text-gray-600 text-sm mt-1">
-                Enter your details to start your financial journey.
-              </p>
+          {/* RIGHT CARD - Form */}
+          <div className="bg-white rounded-xl shadow-lg p-6 lg:p-8 border border-gray-100">
+            <div className="mb-4">
+              <h2 className="text-xl font-bold text-[#0F172A]">Create Account</h2>
+              <p className="text-sm text-gray-600">Enter your details to get started.</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3">
               {/* Full Name */}
               <div>
-                <label className="block text-sm font-medium text-[#0F172A] mb-1.5">
+                <label className="block text-xs font-medium text-[#0F172A] mb-1">
                   Full Name
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                   <input
                     type="text"
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${
+                    className={`w-full pl-9 pr-3 py-2 rounded-lg border ${
                       errors.fullName ? 'border-red-500' : 'border-gray-200'
                     } focus:border-[#0B7A43] focus:ring-2 focus:ring-[#0B7A43]/20 outline-none transition-all text-sm`}
                     placeholder="John Doe"
@@ -230,23 +224,23 @@ const Register = () => {
                   />
                 </div>
                 {errors.fullName && (
-                  <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>
+                  <p className="text-red-500 text-xs mt-0.5">{errors.fullName}</p>
                 )}
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-[#0F172A] mb-1.5">
+                <label className="block text-xs font-medium text-[#0F172A] mb-1">
                   Email Address
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${
+                    className={`w-full pl-9 pr-3 py-2 rounded-lg border ${
                       errors.email ? 'border-red-500' : 'border-gray-200'
                     } focus:border-[#0B7A43] focus:ring-2 focus:ring-[#0B7A43]/20 outline-none transition-all text-sm`}
                     placeholder="john@example.com"
@@ -254,23 +248,23 @@ const Register = () => {
                   />
                 </div>
                 {errors.email && (
-                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                  <p className="text-red-500 text-xs mt-0.5">{errors.email}</p>
                 )}
               </div>
 
               {/* Phone */}
               <div>
-                <label className="block text-sm font-medium text-[#0F172A] mb-1.5">
+                <label className="block text-xs font-medium text-[#0F172A] mb-1">
                   Phone Number
                 </label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                   <input
                     type="tel"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${
+                    className={`w-full pl-9 pr-3 py-2 rounded-lg border ${
                       errors.phone ? 'border-red-500' : 'border-gray-200'
                     } focus:border-[#0B7A43] focus:ring-2 focus:ring-[#0B7A43]/20 outline-none transition-all text-sm`}
                     placeholder="+251 9XX XXX XXX"
@@ -278,23 +272,23 @@ const Register = () => {
                   />
                 </div>
                 {errors.phone && (
-                  <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+                  <p className="text-red-500 text-xs mt-0.5">{errors.phone}</p>
                 )}
               </div>
 
               {/* Password */}
               <div>
-                <label className="block text-sm font-medium text-[#0F172A] mb-1.5">
+                <label className="block text-xs font-medium text-[#0F172A] mb-1">
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-10 py-2.5 rounded-lg border ${
+                    className={`w-full pl-9 pr-9 py-2 rounded-lg border ${
                       errors.password ? 'border-red-500' : 'border-gray-200'
                     } focus:border-[#0B7A43] focus:ring-2 focus:ring-[#0B7A43]/20 outline-none transition-all text-sm`}
                     placeholder="Min 8 characters"
@@ -304,13 +298,13 @@ const Register = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                   </button>
                 </div>
                 {formData.password && (
-                  <div className="mt-2">
+                  <div className="mt-1.5">
                     <div className="flex items-center gap-2">
                       <div className="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
                         <div 
@@ -318,63 +312,62 @@ const Register = () => {
                           style={{ width: `${(passwordStrength / 4) * 100}%` }}
                         />
                       </div>
-                      <span className="text-xs text-gray-500 min-w-[32px]">
+                      <span className="text-xs text-gray-500 min-w-[28px]">
                         {getStrengthText()}
                       </span>
                     </div>
                   </div>
                 )}
                 {errors.password && (
-                  <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                  <p className="text-red-500 text-xs mt-0.5">{errors.password}</p>
                 )}
               </div>
 
               {/* Confirm Password */}
               <div>
-                <label className="block text-sm font-medium text-[#0F172A] mb-1.5">
+                <label className="block text-xs font-medium text-[#0F172A] mb-1">
                   Confirm Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                   <input
                     type={showConfirmPassword ? 'text' : 'password'}
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className={`w-full pl-10 pr-10 py-2.5 rounded-lg border ${
+                    className={`w-full pl-9 pr-9 py-2 rounded-lg border ${
                       errors.confirmPassword ? 'border-red-500' : 'border-gray-200'
                     } focus:border-[#0B7A43] focus:ring-2 focus:ring-[#0B7A43]/20 outline-none transition-all text-sm`}
-                    placeholder="Confirm your password"
+                    placeholder="Confirm password"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
-                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showConfirmPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                   </button>
                 </div>
                 {errors.confirmPassword && (
-                  <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>
+                  <p className="text-red-500 text-xs mt-0.5">{errors.confirmPassword}</p>
                 )}
               </div>
 
               {/* Terms */}
               <div>
-                <label className="flex items-start gap-2 text-sm text-gray-600 cursor-pointer">
+                <label className="flex items-start gap-2 text-xs text-gray-600 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={agreeTerms}
                     onChange={(e) => setAgreeTerms(e.target.checked)}
-                    className="w-4 h-4 mt-0.5 rounded border-gray-300 text-[#0B7A43] focus:ring-[#0B7A43]/20 focus:ring-offset-0"
+                    className="w-3.5 h-3.5 mt-0.5 rounded border-gray-300 text-[#0B7A43] focus:ring-[#0B7A43]/20"
                   />
                   <span>
                     I agree to the{' '}
                     <Link to="/terms" className="text-[#0B7A43] hover:underline font-medium">
-                      Terms and Conditions
+                      Terms
                     </Link>
-                    {' '}and understand how my data is protected.
                   </span>
                 </label>
               </div>
@@ -383,7 +376,7 @@ const Register = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#0B7A43] text-white py-3 rounded-lg font-semibold text-sm hover:bg-[#096336] transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 group"
+                className="w-full bg-[#0B7A43] text-white py-2.5 rounded-lg font-semibold text-sm hover:bg-[#096336] transition-all duration-200 transform hover:scale-[1.01] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -391,19 +384,19 @@ const Register = () => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Creating Account...
+                    Creating...
                   </span>
                 ) : (
                   <>
                     Create Account
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </>
                 )}
               </button>
             </form>
 
-            <div className="mt-4 text-center">
-              <p className="text-sm text-gray-600">
+            <div className="mt-3 text-center">
+              <p className="text-xs text-gray-600">
                 Already have an account?{' '}
                 <Link to="/login" className="text-[#0B7A43] font-semibold hover:underline">
                   Sign in
