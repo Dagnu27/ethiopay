@@ -27,7 +27,7 @@ model User {
   billPayments    BillPayment[]
   withdrawals     Withdrawal[]
   notifications   Notification[]
-  
+    qrCodes            QRCode[] 
   @@map("users")
 }
 
@@ -111,19 +111,18 @@ model Notification {
   user User @relation(fields: [userId], references: [id])
   
   @@map("notifications")
-
-
+}
 model QRCode {
   id          String   @id @default(cuid())
   userId      String   @map("user_id")
   amount      Float
-  description String
+  description String?
   qrData      String   @map("qr_data")
   expiresAt   DateTime @map("expires_at")
-  status      String   @default("active") // active, used, expired
+  status      String   @default("active")
   createdAt   DateTime @default(now()) @map("created_at")
   
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@map("qr_codes")
 }
