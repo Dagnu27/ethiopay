@@ -9,7 +9,8 @@ import {
   ArrowRight,
   Shield,
   Wallet
-} from 'lucide-react';
+} from 'lucide-react';                               
+
 import toast from 'react-hot-toast';
 
 const Login = () => {
