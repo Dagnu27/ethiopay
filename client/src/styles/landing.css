@@ -1,10 +1,19 @@
 /* client/src/styles/landing.css */
+.landing-page {
+  min-height: 100vh;
+}
 
+/* Floating animation */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
 }
 
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Fade up animation */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -16,14 +25,11 @@
   }
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
 .animate-fade-up {
   animation: fadeUp 0.8s ease forwards;
 }
 
+/* Gradient text */
 .text-gradient {
   background: linear-gradient(135deg, #0A6E3D 0%, #C89B2B 100%);
   -webkit-background-clip: text;
@@ -31,6 +37,7 @@
   background-clip: text;
 }
 
+/* Hover lift effect */
 .hover-lift {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -40,6 +47,7 @@
   box-shadow: 0 20px 40px -12px rgba(10, 110, 61, 0.25);
 }
 
+/* Section fade for scroll animations */
 .section-fade {
   opacity: 0;
   transform: translateY(30px);
@@ -51,6 +59,7 @@
   transform: translateY(0);
 }
 
+/* Scrollbar styles */
 .landing-page ::-webkit-scrollbar {
   width: 8px;
 }
@@ -68,6 +77,7 @@
   background: #08532E;
 }
 
+/* Mobile responsiveness */
 @media (max-width: 640px) {
   .text-gradient {
     background: linear-gradient(135deg, #0A6E3D 0%, #C89B2B 100%);
