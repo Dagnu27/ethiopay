@@ -28,13 +28,12 @@ import logoAbyssinia from '/images/logos/logo-abyssinia.png';
 import logoCooperative from '/images/logos/logo-cooperative.png';
 import logoEthioPay from '/images/logos/logo-ethiopay.png';
 
-// Import flag
 import ethiopiaFlag from '/images/hero/hero-ethiopia.png';
 
 const Landing = () => {
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
-      {/* Navbar with Large Logo */}
+      {/* Navbar - Logo Only, No Licensed Text */}
       <nav className="bg-white shadow-sm sticky top-0 z-50">
         <Container className="py-4">
           <div className="flex items-center justify-between">
@@ -67,7 +66,7 @@ const Landing = () => {
         </Container>
       </nav>
 
-      {/* Hero Section - Animated */}
+      {/* Hero Section - Full Background Image */}
       <section 
         className="min-h-screen flex items-center pt-20 relative overflow-hidden"
         style={{
@@ -77,15 +76,16 @@ const Landing = () => {
         }}
       >
         {/* Overlay */}
-        <div className="absolute inset-0 bg-white/85 backdrop-blur-sm"></div>
+        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm"></div>
         
-        {/* Animated Flag - Removed Licensed Text */}
-        <div className="absolute top-24 right-8 animate-float opacity-20">
+        {/* Ethiopian Flag - Decorative */}
+        <div className="absolute top-24 right-8 animate-float opacity-10">
           <img src={ethiopiaFlag} alt="Ethiopia" className="h-32 w-auto" />
         </div>
         
         <Container className="relative z-10 py-20">
           <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
             <div className="animate-fade-up">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 The Future of
@@ -95,7 +95,7 @@ const Landing = () => {
                   <span className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-[#0A6E3D] to-[#C89B2B] rounded-full animate-pulse"></span>
                 </span>
               </h1>
-              <p className="text-lg text-gray-600 mt-6 leading-relaxed animate-fade-up-delay-1">
+              <p className="text-lg text-gray-700 mt-6 leading-relaxed animate-fade-up-delay-1">
                 Fast, secure, and reliable financial services at your fingertips.
                 Join thousands of Ethiopians modernizing their financial lives.
               </p>
@@ -127,7 +127,7 @@ const Landing = () => {
               </div>
             </div>
 
-            {/* Phone Mockup - Animated */}
+            {/* Phone Mockup */}
             <div className="flex justify-center animate-float">
               <div className="relative w-[320px] h-[640px]">
                 <div className="absolute -inset-8 bg-gradient-to-r from-[#0A6E3D]/20 to-[#C89B2B]/20 rounded-full blur-3xl animate-pulse"></div>
@@ -150,7 +150,7 @@ const Landing = () => {
         </Container>
       </section>
 
-      {/* Features Section - Animated */}
+      {/* Features Section */}
       <section id="features" className="py-20 bg-white">
         <Container>
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 animate-fade-up">
@@ -165,27 +165,25 @@ const Landing = () => {
                 icon: iconSecurity, 
                 title: 'Elite Security', 
                 desc: 'Bank-grade encryption with NIBE standards protecting every transaction.',
-                bg: 'bg-blue-50',
-                delay: 'delay-0'
+                bg: 'bg-blue-50'
               },
               { 
                 icon: iconSpeed, 
                 title: 'Instant Transfers', 
                 desc: 'Send and receive money in seconds with zero downtime.',
-                bg: 'bg-yellow-50',
-                delay: 'delay-100'
+                bg: 'bg-yellow-50'
               },
               { 
                 icon: iconRewards, 
                 title: 'Rewards & Offers', 
                 desc: 'Earn cashback and exclusive offers on every transaction.',
-                bg: 'bg-purple-50',
-                delay: 'delay-200'
+                bg: 'bg-purple-50'
               },
             ].map((feature, i) => (
               <div 
                 key={i} 
-                className={`group bg-[#F8FAFC] rounded-2xl p-8 text-center hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 animate-fade-up ${feature.delay}`}
+                className="group bg-[#F8FAFC] rounded-2xl p-8 text-center hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 animate-fade-up"
+                style={{ animationDelay: `${i * 0.1}s` }}
               >
                 <div className={`w-16 h-16 ${feature.bg} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
                   <img src={feature.icon} alt={feature.title} className="h-8 w-8 object-contain" />
@@ -198,7 +196,7 @@ const Landing = () => {
         </Container>
       </section>
 
-      {/* Community Section - Full Image No Frame */}
+      {/* Community Section */}
       <section className="py-20 bg-[#F8FAFC]">
         <Container>
           <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -224,23 +222,21 @@ const Landing = () => {
             </div>
 
             <div className="flex justify-center animate-fade-up-delay-1">
-              <div className="w-full max-w-md">
-                <img 
-                  src={communityMain} 
-                  alt="Ethiopian Community" 
-                  className="w-full rounded-2xl shadow-2xl hover:shadow-3xl transition-shadow duration-500"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = 'https://via.placeholder.com/500x400/0A6E3D/FFFFFF?text=🇪🇹+Community';
-                  }}
-                />
-              </div>
+              <img 
+                src={communityMain} 
+                alt="Ethiopian Community" 
+                className="w-full max-w-md rounded-2xl shadow-2xl hover:shadow-3xl transition-shadow duration-500"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://via.placeholder.com/500x400/0A6E3D/FFFFFF?text=🇪🇹+Community';
+                }}
+              />
             </div>
           </div>
         </Container>
       </section>
 
-      {/* Testimonials Section - Animated */}
+      {/* Testimonials Section */}
       <section className="py-20 bg-white">
         <Container>
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 animate-fade-up">
@@ -273,7 +269,8 @@ const Landing = () => {
             ].map((testimonial, i) => (
               <div 
                 key={i} 
-                className={`bg-[#F8FAFC] rounded-2xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-up delay-${i * 100}`}
+                className="bg-[#F8FAFC] rounded-2xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-up"
+                style={{ animationDelay: `${i * 0.1}s` }}
               >
                 <div className="flex gap-1 mb-4">
                   {[...Array(5)].map((_, j) => (
@@ -304,7 +301,7 @@ const Landing = () => {
         </Container>
       </section>
 
-      {/* Bank Logos Section - Animated */}
+      {/* Bank Logos Section */}
       <section className="py-16 bg-[#F8FAFC] border-y border-gray-200">
         <Container>
           <p className="text-center text-sm text-gray-500 mb-8 animate-fade-up">Trusted by leading Ethiopian Banks</p>
@@ -318,7 +315,7 @@ const Landing = () => {
         </Container>
       </section>
 
-      {/* CTA Section - Animated */}
+      {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-[#0A6E3D] to-[#08532E]">
         <Container>
           <div className="text-center animate-fade-up">
