@@ -33,7 +33,7 @@ import ethiopiaFlag from '/images/hero/hero-ethiopia.png';
 const Landing = () => {
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
-      {/* Navbar - Logo Only, No Licensed Text */}
+      {/* Navbar */}
       <nav className="bg-white shadow-sm sticky top-0 z-50">
         <Container className="py-4">
           <div className="flex items-center justify-between">
@@ -66,7 +66,7 @@ const Landing = () => {
         </Container>
       </nav>
 
-      {/* Hero Section - Full Background Image */}
+      {/* Hero Section - Background Image HERE (after navbar) */}
       <section 
         className="min-h-screen flex items-center pt-20 relative overflow-hidden"
         style={{
@@ -87,6 +87,12 @@ const Landing = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
             <div className="animate-fade-up">
+              {/* "Licensed in Ethiopia" Badge - KEPT */}
+              <div className="inline-block bg-[#0A6E3D]/10 text-[#0A6E3D] px-4 py-1 rounded-full text-sm font-medium mb-4 flex items-center gap-2">
+                <img src={iconShield} alt="Shield" className="h-4 w-4" />
+                ✅ Licensed in Ethiopia
+              </div>
+              
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 The Future of
                 <br />
