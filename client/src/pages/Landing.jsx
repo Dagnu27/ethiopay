@@ -28,32 +28,37 @@ import logoAbyssinia from '/images/logos/logo-abyssinia.png';
 import logoCooperative from '/images/logos/logo-cooperative.png';
 import logoEthioPay from '/images/logos/logo-ethiopay.png';
 
+// Import flag
+import ethiopiaFlag from '/images/hero/hero-ethiopia.png';
+
 const Landing = () => {
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
-      {/* Navbar */}
+      {/* Navbar with Large Logo */}
       <nav className="bg-white shadow-sm sticky top-0 z-50">
         <Container className="py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-3 group">
               <img 
                 src={logoEthioPay} 
                 alt="EthioPay" 
-                className="h-10 w-auto"
+                className="h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-110"
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = 'https://via.placeholder.com/40x40/0A6E3D/FFFFFF?text=E';
+                  e.target.src = 'https://via.placeholder.com/56x56/0A6E3D/FFFFFF?text=E';
                 }}
               />
-              <span className="text-xl font-bold text-[#0A6E3D]">EthioPay</span>
-            </div>
+              <span className="text-2xl font-bold text-[#0A6E3D] group-hover:text-[#08532E] transition-colors">
+                EthioPay
+              </span>
+            </Link>
             <div className="flex items-center gap-4">
               <Link to="/login" className="text-sm font-medium text-gray-600 hover:text-[#0A6E3D] transition">
                 Sign In
               </Link>
               <Link
                 to="/register"
-                className="bg-[#0A6E3D] text-white px-6 py-2 rounded-xl text-sm font-medium hover:bg-[#08532E] transition shadow-lg shadow-[#0A6E3D]/20"
+                className="bg-[#0A6E3D] text-white px-6 py-2 rounded-xl text-sm font-medium hover:bg-[#08532E] transition shadow-lg shadow-[#0A6E3D]/20 hover:shadow-xl hover:shadow-[#0A6E3D]/30 transform hover:scale-105 transition-all duration-300"
               >
                 Get Started
               </Link>
@@ -62,7 +67,7 @@ const Landing = () => {
         </Container>
       </nav>
 
-      {/* Hero Section */}
+      {/* Hero Section - Animated */}
       <section 
         className="min-h-screen flex items-center pt-20 relative overflow-hidden"
         style={{
@@ -72,39 +77,44 @@ const Landing = () => {
         }}
       >
         {/* Overlay */}
-        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm"></div>
+        <div className="absolute inset-0 bg-white/85 backdrop-blur-sm"></div>
+        
+        {/* Animated Flag - Removed Licensed Text */}
+        <div className="absolute top-24 right-8 animate-float opacity-20">
+          <img src={ethiopiaFlag} alt="Ethiopia" className="h-32 w-auto" />
+        </div>
         
         <Container className="relative z-10 py-20">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="inline-block bg-[#0A6E3D]/10 text-[#0A6E3D] px-4 py-1 rounded-full text-sm font-medium mb-4 flex items-center gap-2">
-                <img src={iconShield} alt="Shield" className="h-4 w-4" />
-                ✅ Licensed in Ethiopia
-              </div>
+            <div className="animate-fade-up">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 The Future of
                 <br />
-                <span className="text-[#0A6E3D]">Financial Freedom</span>
+                <span className="text-[#0A6E3D] relative">
+                  Financial Freedom
+                  <span className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-[#0A6E3D] to-[#C89B2B] rounded-full animate-pulse"></span>
+                </span>
               </h1>
-              <p className="text-lg text-gray-600 mt-4 leading-relaxed">
+              <p className="text-lg text-gray-600 mt-6 leading-relaxed animate-fade-up-delay-1">
                 Fast, secure, and reliable financial services at your fingertips.
                 Join thousands of Ethiopians modernizing their financial lives.
               </p>
-              <div className="flex flex-wrap gap-4 mt-8">
+              <div className="flex flex-wrap gap-4 mt-8 animate-fade-up-delay-2">
                 <Link
                   to="/register"
-                  className="bg-[#0A6E3D] text-white px-8 py-3 rounded-xl font-semibold hover:bg-[#08532E] transition shadow-lg shadow-[#0A6E3D]/20 flex items-center gap-2"
+                  className="bg-[#0A6E3D] text-white px-8 py-3 rounded-xl font-semibold hover:bg-[#08532E] transition shadow-lg shadow-[#0A6E3D]/20 hover:shadow-xl hover:shadow-[#0A6E3D]/30 transform hover:scale-105 transition-all duration-300 flex items-center gap-2 group"
                 >
-                  Get Started →
+                  Get Started 
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
                 </Link>
                 <button
                   onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="border-2 border-[#0A6E3D] text-[#0A6E3D] px-8 py-3 rounded-xl font-semibold hover:bg-[#0A6E3D]/5 transition"
+                  className="border-2 border-[#0A6E3D] text-[#0A6E3D] px-8 py-3 rounded-xl font-semibold hover:bg-[#0A6E3D]/5 transition transform hover:scale-105 hover:shadow-lg"
                 >
                   Learn More
                 </button>
               </div>
-              <div className="flex items-center gap-6 mt-8">
+              <div className="flex items-center gap-6 mt-8 animate-fade-up-delay-3">
                 <div className="flex -space-x-3">
                   <img src={community1} alt="User" className="w-10 h-10 rounded-full border-2 border-white object-cover" />
                   <img src={community2} alt="User" className="w-10 h-10 rounded-full border-2 border-white object-cover" />
@@ -117,10 +127,10 @@ const Landing = () => {
               </div>
             </div>
 
-            {/* Phone Mockup */}
-            <div className="flex justify-center">
+            {/* Phone Mockup - Animated */}
+            <div className="flex justify-center animate-float">
               <div className="relative w-[320px] h-[640px]">
-                <div className="absolute -inset-8 bg-[#0A6E3D]/20 rounded-full blur-3xl animate-float"></div>
+                <div className="absolute -inset-8 bg-gradient-to-r from-[#0A6E3D]/20 to-[#C89B2B]/20 rounded-full blur-3xl animate-pulse"></div>
                 <div className="relative w-full h-full bg-[#0F172A] rounded-[40px] p-4 shadow-2xl">
                   <div className="w-full h-full bg-white rounded-[32px] overflow-hidden">
                     <img 
@@ -140,13 +150,13 @@ const Landing = () => {
         </Container>
       </section>
 
-      {/* Features Section */}
+      {/* Features Section - Animated */}
       <section id="features" className="py-20 bg-white">
         <Container>
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 animate-fade-up">
             Why Choose <span className="text-[#0A6E3D]">EthioPay</span>?
           </h2>
-          <p className="text-center text-gray-600 max-w-2xl mx-auto mb-12">
+          <p className="text-center text-gray-600 max-w-2xl mx-auto mb-12 animate-fade-up-delay-1">
             Experience the future of Ethiopian fintech with features designed for you.
           </p>
           <div className="grid md:grid-cols-3 gap-8">
@@ -155,23 +165,29 @@ const Landing = () => {
                 icon: iconSecurity, 
                 title: 'Elite Security', 
                 desc: 'Bank-grade encryption with NIBE standards protecting every transaction.',
-                bg: 'bg-blue-50'
+                bg: 'bg-blue-50',
+                delay: 'delay-0'
               },
               { 
                 icon: iconSpeed, 
                 title: 'Instant Transfers', 
                 desc: 'Send and receive money in seconds with zero downtime.',
-                bg: 'bg-yellow-50'
+                bg: 'bg-yellow-50',
+                delay: 'delay-100'
               },
               { 
                 icon: iconRewards, 
                 title: 'Rewards & Offers', 
                 desc: 'Earn cashback and exclusive offers on every transaction.',
-                bg: 'bg-purple-50'
+                bg: 'bg-purple-50',
+                delay: 'delay-200'
               },
             ].map((feature, i) => (
-              <div key={i} className="group bg-[#F8FAFC] rounded-2xl p-8 text-center hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100">
-                <div className={`w-16 h-16 ${feature.bg} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
+              <div 
+                key={i} 
+                className={`group bg-[#F8FAFC] rounded-2xl p-8 text-center hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 animate-fade-up ${feature.delay}`}
+              >
+                <div className={`w-16 h-16 ${feature.bg} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
                   <img src={feature.icon} alt={feature.title} className="h-8 w-8 object-contain" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
@@ -182,60 +198,55 @@ const Landing = () => {
         </Container>
       </section>
 
-      {/* Community Section */}
+      {/* Community Section - Full Image No Frame */}
       <section className="py-20 bg-[#F8FAFC]">
         <Container>
-          <div className="bg-[#0A6E3D] rounded-3xl p-8 md:p-16 overflow-hidden">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div className="space-y-6">
-                <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">
-                  Designed for the <br />
-                  <span className="text-[#C89B2B]">Community</span>
-                </h2>
-                <p className="text-white/80 text-lg">
-                  Built by Ethiopians, for Ethiopians. Every feature is designed with our community in mind.
-                </p>
-                <div className="flex items-center gap-6">
-                  <div className="flex -space-x-3">
-                    <img src={community1} alt="Community" className="w-12 h-12 rounded-full border-2 border-white object-cover" />
-                    <img src={community2} alt="Community" className="w-12 h-12 rounded-full border-2 border-white object-cover" />
-                    <img src={community3} alt="Community" className="w-12 h-12 rounded-full border-2 border-white object-cover" />
-                  </div>
-                  <div>
-                    <p className="text-white font-semibold">10k+ New Users</p>
-                    <p className="text-white/60 text-sm">Joined this month</p>
-                  </div>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6 animate-fade-up">
+              <h2 className="text-3xl md:text-4xl font-bold leading-tight">
+                Designed for the <br />
+                <span className="text-[#0A6E3D]">Community</span>
+              </h2>
+              <p className="text-gray-600 text-lg leading-relaxed">
+                Built by Ethiopians, for Ethiopians. Every feature is designed with our community in mind.
+              </p>
+              <div className="flex items-center gap-6">
+                <div className="flex -space-x-3">
+                  <img src={community1} alt="Community" className="w-12 h-12 rounded-full border-2 border-white object-cover" />
+                  <img src={community2} alt="Community" className="w-12 h-12 rounded-full border-2 border-white object-cover" />
+                  <img src={community3} alt="Community" className="w-12 h-12 rounded-full border-2 border-white object-cover" />
+                </div>
+                <div>
+                  <p className="font-semibold text-[#0F172A]">10k+ New Users</p>
+                  <p className="text-sm text-gray-500">Joined this month</p>
                 </div>
               </div>
+            </div>
 
-              <div className="flex justify-center">
-                <div className="w-full max-w-sm bg-white/10 rounded-2xl p-6 backdrop-blur-sm border border-white/10">
-                  <img 
-                    src={communityMain} 
-                    alt="Ethiopian Community" 
-                    className="w-full rounded-xl aspect-video object-cover"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = 'https://via.placeholder.com/400x300/0A6E3D/FFFFFF?text=🇪🇹+Community';
-                    }}
-                  />
-                  <p className="text-white/60 text-center text-sm mt-4">
-                    Ethiopian community coming together
-                  </p>
-                </div>
+            <div className="flex justify-center animate-fade-up-delay-1">
+              <div className="w-full max-w-md">
+                <img 
+                  src={communityMain} 
+                  alt="Ethiopian Community" 
+                  className="w-full rounded-2xl shadow-2xl hover:shadow-3xl transition-shadow duration-500"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://via.placeholder.com/500x400/0A6E3D/FFFFFF?text=🇪🇹+Community';
+                  }}
+                />
               </div>
             </div>
           </div>
         </Container>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Testimonials Section - Animated */}
       <section className="py-20 bg-white">
         <Container>
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 animate-fade-up">
             What Our <span className="text-[#0A6E3D]">Community</span> Says
           </h2>
-          <p className="text-center text-gray-600 max-w-2xl mx-auto mb-12">
+          <p className="text-center text-gray-600 max-w-2xl mx-auto mb-12 animate-fade-up-delay-1">
             Real stories from real users who trust EthioPay.
           </p>
 
@@ -260,7 +271,10 @@ const Landing = () => {
                 image: user3
               },
             ].map((testimonial, i) => (
-              <div key={i} className="bg-[#F8FAFC] rounded-2xl p-8 hover:shadow-xl transition">
+              <div 
+                key={i} 
+                className={`bg-[#F8FAFC] rounded-2xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-up delay-${i * 100}`}
+              >
                 <div className="flex gap-1 mb-4">
                   {[...Array(5)].map((_, j) => (
                     <span key={j} className="text-[#C89B2B]">⭐</span>
@@ -273,7 +287,7 @@ const Landing = () => {
                   <img 
                     src={testimonial.image} 
                     alt={testimonial.name} 
-                    className="w-12 h-12 rounded-full object-cover"
+                    className="w-12 h-12 rounded-full object-cover border-2 border-[#0A6E3D]/20"
                     onError={(e) => {
                       e.target.onerror = null;
                       e.target.src = 'https://via.placeholder.com/48x48/0A6E3D/FFFFFF?text=' + testimonial.name.charAt(0);
@@ -290,31 +304,31 @@ const Landing = () => {
         </Container>
       </section>
 
-      {/* Bank Logos Section */}
+      {/* Bank Logos Section - Animated */}
       <section className="py-16 bg-[#F8FAFC] border-y border-gray-200">
         <Container>
-          <p className="text-center text-sm text-gray-500 mb-8">Trusted by leading Ethiopian Banks</p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-            <img src={logoCbe} alt="Commercial Bank of Ethiopia" className="h-12 w-auto grayscale hover:grayscale-0 transition" />
-            <img src={logoAwash} alt="Awash Bank" className="h-12 w-auto grayscale hover:grayscale-0 transition" />
-            <img src={logoDashen} alt="Dashen Bank" className="h-12 w-auto grayscale hover:grayscale-0 transition" />
-            <img src={logoAbyssinia} alt="Bank of Abyssinia" className="h-12 w-auto grayscale hover:grayscale-0 transition" />
-            <img src={logoCooperative} alt="Cooperative Bank" className="h-12 w-auto grayscale hover:grayscale-0 transition" />
+          <p className="text-center text-sm text-gray-500 mb-8 animate-fade-up">Trusted by leading Ethiopian Banks</p>
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 animate-fade-up-delay-1">
+            <img src={logoCbe} alt="Commercial Bank of Ethiopia" className="h-12 w-auto grayscale hover:grayscale-0 transition hover:scale-110 duration-300" />
+            <img src={logoAwash} alt="Awash Bank" className="h-12 w-auto grayscale hover:grayscale-0 transition hover:scale-110 duration-300" />
+            <img src={logoDashen} alt="Dashen Bank" className="h-12 w-auto grayscale hover:grayscale-0 transition hover:scale-110 duration-300" />
+            <img src={logoAbyssinia} alt="Bank of Abyssinia" className="h-12 w-auto grayscale hover:grayscale-0 transition hover:scale-110 duration-300" />
+            <img src={logoCooperative} alt="Cooperative Bank" className="h-12 w-auto grayscale hover:grayscale-0 transition hover:scale-110 duration-300" />
           </div>
         </Container>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-[#0A6E3D]">
+      {/* CTA Section - Animated */}
+      <section className="py-20 bg-gradient-to-r from-[#0A6E3D] to-[#08532E]">
         <Container>
-          <div className="text-center">
+          <div className="text-center animate-fade-up">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Ready to join Ethiopia's smartest <br />
               <span className="text-[#C89B2B]">digital wallet</span>?
             </h2>
             <Link
               to="/register"
-              className="inline-block bg-[#C89B2B] text-white px-10 py-4 rounded-xl font-semibold text-lg hover:bg-[#A87B1A] transition shadow-lg shadow-[#C89B2B]/30"
+              className="inline-block bg-[#C89B2B] text-white px-10 py-4 rounded-xl font-semibold text-lg hover:bg-[#A87B1A] transition shadow-lg shadow-[#C89B2B]/30 hover:shadow-xl hover:shadow-[#C89B2B]/40 transform hover:scale-105 transition-all duration-300"
             >
               Create Free Account →
             </Link>
@@ -328,7 +342,7 @@ const Landing = () => {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <img src={logoEthioPay} alt="EthioPay" className="h-10 w-auto" />
+                <img src={logoEthioPay} alt="EthioPay" className="h-12 w-auto" />
                 <span className="text-xl font-bold text-[#0A6E3D]">EthioPay</span>
               </div>
               <p className="text-sm text-gray-400">
