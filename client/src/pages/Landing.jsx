@@ -1,4 +1,4 @@
-   import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Container } from '../components/landing/Container';
@@ -17,7 +17,8 @@ import {
   Award,
   Menu,
   X,
-   ArrowLeft,
+  ArrowLeft,
+  ChevronDown,  // ✅ ADDED
 } from 'lucide-react';
 import '../styles/landing.css';
 
@@ -172,24 +173,14 @@ const Hero = () => {
 
   return (
     <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background Image with Parallax */}
-      <motion.div
-        style={{ scale, y }}
-        className="absolute inset-0"
-      >
-        <img
-          src={heroBg}
-          alt="Digital Finance"
-          className="w-full h-full object-cover"
-        />
+      <motion.div style={{ scale, y }} className="absolute inset-0">
+        <img src={heroBg} alt="Digital Finance" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-br from-[#0F172A]/70 via-[#0F172A]/50 to-[#0A6E3D]/30" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-transparent to-transparent" />
       </motion.div>
 
-      {/* Noise Texture */}
       <div className="absolute inset-0 bg-noise opacity-5" />
 
-      {/* Animated Gradient Orbs */}
       <motion.div
         animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
         transition={{ duration: 15, repeat: Infinity }}
@@ -203,15 +194,12 @@ const Hero = () => {
 
       <Container className="relative z-10 py-20">
         <div className="grid lg:grid-cols-2 gap-16 items-center min-h-[80vh]">
-          
-          {/* LEFT CONTENT */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="space-y-8"
           >
-            {/* Trust Badge */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -222,7 +210,6 @@ const Hero = () => {
               <span className="text-sm text-white/90">#1 Digital Wallet in Ethiopia</span>
             </motion.div>
 
-            {/* Headline */}
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -238,7 +225,6 @@ const Hero = () => {
               Than Ever
             </motion.h1>
 
-            {/* Description */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -249,7 +235,6 @@ const Hero = () => {
               The smartest way to handle your finances in Ethiopia.
             </motion.p>
 
-            {/* CTA Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -272,7 +257,6 @@ const Hero = () => {
               </button>
             </motion.div>
 
-            {/* Social Proof */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -281,10 +265,7 @@ const Hero = () => {
             >
               <div className="flex -space-x-3">
                 {['A', 'B', 'C', 'D'].map((letter, i) => (
-                  <div
-                    key={i}
-                    className="w-10 h-10 rounded-full border-2 border-white/20 bg-white/10 flex items-center justify-center text-white font-medium text-sm backdrop-blur-sm"
-                  >
+                  <div key={i} className="w-10 h-10 rounded-full border-2 border-white/20 bg-white/10 flex items-center justify-center text-white font-medium text-sm backdrop-blur-sm">
                     {letter}
                   </div>
                 ))}
@@ -301,39 +282,27 @@ const Hero = () => {
             </motion.div>
           </motion.div>
 
-          {/* RIGHT CONTENT - Floating Screenshot */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.4 }}
             className="relative flex justify-center items-center"
           >
-            {/* Floating Cards Container */}
             <FloatingCards />
 
-            {/* Main Screenshot - No Phone Frame */}
             <motion.div
               animate={{ y: [0, -15, 0], rotate: [0, 1, 0] }}
               transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
               className="relative w-full max-w-md"
             >
-              {/* Glow Background */}
               <div className="absolute -inset-12 bg-gradient-to-r from-[#10B981]/20 via-[#0A6E3D]/20 to-[#C89B2B]/20 rounded-full blur-3xl animate-pulse" />
 
-              {/* Glass Card Container */}
               <div className="relative glass-screenshot rounded-3xl overflow-hidden shadow-2xl shadow-[#0A6E3D]/20">
-                <img
-                  src={appScreenshot}
-                  alt="EthioPay App"
-                  className="w-full h-auto"
-                />
-                
-                {/* Glass Reflection */}
+                <img src={appScreenshot} alt="EthioPay App" className="w-full h-auto" />
                 <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-white/10 pointer-events-none" />
                 <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
               </div>
 
-              {/* Floating Glow */}
               <motion.div
                 animate={{ opacity: [0.3, 0.6, 0.3] }}
                 transition={{ duration: 3, repeat: Infinity }}
@@ -347,7 +316,7 @@ const Hero = () => {
   );
 };
 
-// ============ STATS SECTION ============
+// ============ STATS ============
 const PremiumStats = () => {
   const stats = [
     { value: '100K+', label: 'Active Users', icon: Users },
@@ -388,7 +357,7 @@ const PremiumStats = () => {
   );
 };
 
-// ============ FEATURES (DEFINED HERE - OUTSIDE Landing) ============
+// ============ FEATURES ============
 const Features = () => {
   const features = [
     { icon: '⚡', title: 'Instant Transfers', desc: 'Send money instantly to anyone in Ethiopia with zero fees.' },
@@ -400,21 +369,29 @@ const Features = () => {
   ];
 
   return (
-    <section className="py-24 bg-[#0F172A]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+    <section id="features" className="py-24 bg-[#0F172A]">
+      <Container>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
             Everything You Need in{' '}
-            <span className="text-[#10B981]">One App</span>
+            <span className="bg-gradient-to-r from-[#10B981] to-[#0A6E3D] bg-clip-text text-transparent">
+              One App
+            </span>
           </h2>
           <p className="text-lg text-white/60">Powerful features designed to simplify your financial life.</p>
-        </div>
+        </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/10 transition-all hover:-translate-y-1"
+              className="glass-feature-card rounded-2xl p-8 border border-white/10 hover:bg-white/10 transition-all hover:-translate-y-1"
             >
               <div className="w-14 h-14 bg-[#0A6E3D]/20 rounded-2xl flex items-center justify-center mb-4 text-3xl">
                 {feature.icon}
@@ -424,7 +401,7 @@ const Features = () => {
             </div>
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 };
@@ -492,16 +469,9 @@ const Testimonials = () => {
     { name: 'Helen G.', role: 'Freelance Designer', quote: 'I love how easy it is to send and receive money. The QR code feature is a game-changer for my business.', initial: 'H' },
   ];
 
-  // Navigation functions
-  const next = () => {
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-  };
+  const next = () => setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+  const prev = () => setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
 
-  const prev = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
-
-  // Auto-play (optional - every 5 seconds)
   useEffect(() => {
     const interval = setInterval(next, 5000);
     return () => clearInterval(interval);
@@ -527,37 +497,26 @@ const Testimonials = () => {
         </motion.div>
 
         <div className="relative max-w-4xl mx-auto">
-          {/* Testimonial Card with Animation */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentIndex}
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.5 }}
-              className="glass-testimonial rounded-3xl p-8 md:p-12 text-center"
-            >
-              <div className="flex justify-center gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-[#C89B2B] text-[#C89B2B]" />
-                ))}
+          <div className="glass-testimonial rounded-3xl p-8 md:p-12 text-center">
+            <div className="flex justify-center gap-1 mb-4">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-5 h-5 fill-[#C89B2B] text-[#C89B2B]" />
+              ))}
+            </div>
+            <p className="text-lg md:text-xl text-white/80 leading-relaxed mb-6">
+              "{testimonials[currentIndex].quote}"
+            </p>
+            <div className="flex items-center justify-center gap-4">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#0A6E3D] to-[#10B981] flex items-center justify-center text-white text-xl font-bold">
+                {testimonials[currentIndex].initial}
               </div>
-              <p className="text-lg md:text-xl text-white/80 leading-relaxed mb-6">
-                "{testimonials[currentIndex].quote}"
-              </p>
-              <div className="flex items-center justify-center gap-4">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#0A6E3D] to-[#10B981] flex items-center justify-center text-white text-xl font-bold">
-                  {testimonials[currentIndex].initial}
-                </div>
-                <div className="text-left">
-                  <p className="font-semibold text-white">{testimonials[currentIndex].name}</p>
-                  <p className="text-sm text-white/50">{testimonials[currentIndex].role}</p>
-                </div>
+              <div className="text-left">
+                <p className="font-semibold text-white">{testimonials[currentIndex].name}</p>
+                <p className="text-sm text-white/50">{testimonials[currentIndex].role}</p>
               </div>
-            </motion.div>
-          </AnimatePresence>
+            </div>
+          </div>
 
-          {/* Navigation Buttons */}
           <button
             onClick={prev}
             className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-8 glass-button p-3 rounded-full hover:bg-white/10 transition"
@@ -572,22 +531,167 @@ const Testimonials = () => {
           </button>
         </div>
 
-        {/* Dots Indicator */}
         <div className="flex justify-center gap-2 mt-6">
           {testimonials.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
               className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                currentIndex === index
-                  ? 'w-8 bg-[#10B981]'
-                  : 'bg-white/20 hover:bg-white/40'
+                currentIndex === index ? 'w-8 bg-[#10B981]' : 'bg-white/20 hover:bg-white/40'
               }`}
             />
           ))}
         </div>
       </Container>
     </section>
+  );
+};
+
+// ============ FAQ ============
+const FAQ = () => {
+  const [openIndex, setOpenIndex] = useState(null);
+  const faqs = [
+    { q: 'Is EthioPay free to use?', a: 'Yes! EthioPay is completely free to use. No hidden fees, no monthly charges.' },
+    { q: 'How do I create an account?', a: 'Simply download the app, enter your phone number, and follow the verification steps.' },
+    { q: 'Is my money safe?', a: 'Absolutely. We use bank-grade encryption and are fully compliant with NBE regulations.' },
+    { q: 'How long do transfers take?', a: 'Transfers are instant. The recipient receives the money within seconds.' },
+    { q: 'What if I have an issue?', a: 'Our 24/7 support team is always ready to help you via chat or phone.' },
+  ];
+
+  return (
+    <section className="py-24 bg-[#0F172A] border-t border-white/5">
+      <Container>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+            Frequently Asked{' '}
+            <span className="bg-gradient-to-r from-[#10B981] to-[#0A6E3D] bg-clip-text text-transparent">
+              Questions
+            </span>
+          </h2>
+          <p className="text-lg text-white/60">Everything you need to know about EthioPay.</p>
+        </motion.div>
+
+        <div className="max-w-3xl mx-auto space-y-4">
+          {faqs.map((faq, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.05 }}
+              viewport={{ once: true }}
+              className="glass-faq-card rounded-2xl overflow-hidden border border-white/5"
+            >
+              <button
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                className="w-full px-6 py-4 flex items-center justify-between text-left"
+              >
+                <span className="font-semibold text-white">{faq.q}</span>
+                <ChevronDown className={`w-5 h-5 text-white/60 transition-transform duration-300 ${
+                  openIndex === index ? 'rotate-180' : ''
+                }`} />
+              </button>
+              <motion.div
+                initial={false}
+                animate={{ height: openIndex === index ? 'auto' : 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                <div className="px-6 pb-4 text-white/60 leading-relaxed">{faq.a}</div>
+              </motion.div>
+            </motion.div>
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+};
+
+// ============ CTA ============
+const CTA = () => {
+  return (
+    <section className="py-24 relative overflow-hidden bg-gradient-to-br from-[#0A6E3D] to-[#08532E]">
+      <div className="absolute inset-0 bg-grid-pattern opacity-10" />
+      <motion.div
+        animate={{ scale: [1, 1.1, 1] }}
+        transition={{ duration: 4, repeat: Infinity }}
+        className="absolute -top-40 -right-40 w-80 h-80 bg-[#C89B2B]/20 rounded-full blur-3xl"
+      />
+      <Container className="relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center max-w-3xl mx-auto"
+        >
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+            Start Your Financial
+            <br />
+            <span className="text-[#C89B2B]">Journey Today</span>
+          </h2>
+          <p className="text-white/80 text-lg mb-8 leading-relaxed">
+            Join thousands of Ethiopians who trust EthioPay for their financial needs.
+          </p>
+          <Link
+            to="/register"
+            className="inline-flex items-center gap-2 bg-[#C89B2B] text-white px-10 py-4 rounded-2xl font-semibold text-lg hover:bg-[#A87B1A] transition-all hover:scale-105 shadow-2xl shadow-[#C89B2B]/30"
+          >
+            Get Started Now
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+        </motion.div>
+      </Container>
+    </section>
+  );
+};
+
+// ============ FOOTER ============
+const Footer = () => {
+  return (
+    <footer className="bg-[#0A0F1F] text-white border-t border-white/5">
+      <Container className="py-16">
+        <div className="grid md:grid-cols-4 gap-8">
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <span className="text-xl font-bold text-[#0A6E3D]">EthioPay</span>
+            </div>
+            <p className="text-sm text-white/50 max-w-sm leading-relaxed">
+              Pioneering the next generation of financial inclusion for every Ethiopian.
+            </p>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-4">Product</h4>
+            <ul className="space-y-2 text-sm text-white/50">
+              <li><a href="#features" className="hover:text-white transition">Features</a></li>
+              <li><a href="#security" className="hover:text-white transition">Security</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-4">Company</h4>
+            <ul className="space-y-2 text-sm text-white/50">
+              <li><a href="#" className="hover:text-white transition">About Us</a></li>
+              <li><a href="#" className="hover:text-white transition">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-4">Legal</h4>
+            <ul className="space-y-2 text-sm text-white/50">
+              <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
+              <li><a href="#" className="hover:text-white transition">Terms of Service</a></li>
+            </ul>
+          </div>
+        </div>
+        <div className="mt-12 pt-8 border-t border-white/5 text-center text-sm text-white/30">
+          <p>© {new Date().getFullYear()} EthioPay. All rights reserved.</p>
+        </div>
+      </Container>
+    </footer>
   );
 };
 
@@ -602,21 +706,12 @@ const Landing = () => {
       <Navbar />
       <Hero />
       <PremiumStats />
-      
-      {/* Features Section - Called Here */}
       <Features />
-      <HowItWorks/>
-      <Testimonials/>
-      {/* Rest of sections... */}
-      <section className="py-20 bg-[#0F172A]">
-        <Container>
-          <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              More sections coming...
-            </h2>
-          </div>
-        </Container>
-      </section>
+      <HowItWorks />
+      <Testimonials />
+      <FAQ />
+      <CTA />
+      <Footer />
     </div>
   );
 };
