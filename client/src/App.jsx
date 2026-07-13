@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import './index.css';
 import './styles/landing.css';
 import SendMoney from './pages/SendMoney';
+import Transactions from './pages/Transactions';
 
 // Pages
 import Landing from './pages/Landing';
@@ -39,6 +40,9 @@ function App() {
           } />
           <Route path="/send" element={
   <ProtectedRoute><SendMoney /></ProtectedRoute>
+} />
+<Route path="/transactions" element={
+  <ProtectedRoute><Transactions /></ProtectedRoute>
 } />
         </Routes>
       </BrowserRouter>
