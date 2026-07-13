@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import './index.css';
 import './styles/landing.css';
+import SendMoney from './pages/SendMoney';
 
 // Pages
 import Landing from './pages/Landing';
@@ -29,12 +30,16 @@ function App() {
       <BrowserRouter>
         <Toaster position="top-right" />
         <Routes>
+
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={
             <ProtectedRoute><Dashboard /></ProtectedRoute>
           } />
+          <Route path="/send" element={
+  <ProtectedRoute><SendMoney /></ProtectedRoute>
+} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

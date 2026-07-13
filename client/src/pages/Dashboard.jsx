@@ -47,7 +47,7 @@ import Insights from '../components/dashboard/Insights';
 import Transactions from '../components/dashboard/Transactions';
 import BudgetTracker from '../components/dashboard/BudgetTracker';
 import PaymentCards from '../components/dashboard/PaymentCards';
-import '../../styles/dashboard.css';
+import '../styles/dashboard.css';
 
 const Dashboard = () => {
   const { user } = useAuth();
