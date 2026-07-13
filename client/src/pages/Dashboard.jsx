@@ -1,29 +1,87 @@
+// client/src/pages/Dashboard.jsx
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { transactionService } from '../services/api';
-import {
-  ArrowUpIcon,
-  ArrowDownIcon,
-  CreditCardIcon,
-  ArrowRightIcon,
-  BanknotesIcon,
-  QrCodeIcon,
-  DocumentTextIcon,
-  ArrowPathIcon,
-  BellIcon,
-  ChartBarIcon,
-  UserIcon,
-  Cog6ToothIcon,
-} from '@heroicons/react/24/outline';
+import { 
+  Wallet, 
+  TrendingUp, 
+  TrendingDown, 
+  ArrowUpRight, 
+  ArrowDownLeft,
+  Search,
+  Bell,
+  Sun,
+  Moon,
+  Menu,
+  X,
+  LogOut,
+  User,
+  Settings,
+  HelpCircle,
+  CreditCard,
+  Send,
+  QrCode,
+  FileText,
+  Phone,
+  Coins,
+  BarChart3,
+  PieChart,
+  Home,
+  Gift,
+  Sparkles,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+  MoreHorizontal
+} from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, Area, AreaChart } from 'recharts';
+import toast from 'react-hot-toast';
+
+// Import components
+import Sidebar from '../components/dashboard/Sidebar';
+import TopNav from '../components/dashboard/TopNav';
+import BalanceCard from '../components/dashboard/BalanceCard';
+import QuickActions from '../components/dashboard/QuickActions';
+import Analytics from '../components/dashboard/Analytics';
+import Insights from '../components/dashboard/Insights';
+import Transactions from '../components/dashboard/Transactions';
+import BudgetTracker from '../components/dashboard/BudgetTracker';
+import PaymentCards from '../components/dashboard/PaymentCards';
+import Notifications from '../components/dashboard/Notifications';
+import '../../styles/dashboard.css';
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-  const [balance, setBalance] = useState(0);
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [balance, setBalance] = useState(124580);
   const [transactions, setTransactions] = useState([]);
-  const [dailySpending, setDailySpending] = useState(2450.50);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
+  const [stats, setStats] = useState({
+    income: 142500,
+    expenses: 84210.50,
+    savings: 58289.50,
+    totalTransactions: 124
+  });
+
+  // Sample data
+  const spendingData = [
+    { name: 'Jan', income: 120000, expenses: 78000 },
+    { name: 'Feb', income: 132000, expenses: 82000 },
+    { name: 'Mar', income: 110000, expenses: 65000 },
+    { name: 'Apr', income: 145000, expenses: 88000 },
+    { name: 'May', income: 138000, expenses: 79000 },
+    { name: 'Jun', income: 142500, expenses: 84210 },
+  ];
+
+  const categoryData = [
+    { name: 'Food', value: 35, color: '#FF6B6B' },
+    { name: 'Transport', value: 20, color: '#4ECDC4' },
+    { name: 'Shopping', value: 25, color: '#45B7D1' },
+    { name: 'Bills', value: 15, color: '#96CEB4' },
+    { name: 'Others', value: 5, color: '#FFEAA7' },
+  ];
 
   useEffect(() => {
     fetchDashboardData();
@@ -32,250 +90,154 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const [balanceRes, transactionsRes] = await Promise.all([
-        transactionService.balance(),
-        transactionService.history({ limit: 4 }),
-      ]);
+      // Fetch real data from API
+      const balanceRes = await transactionService.balance();
+      const historyRes = await transactionService.history({ limit: 10 });
       setBalance(balanceRes.data.balance);
-      setTransactions(transactionsRes.data.transactions || []);
+      setTransactions(historyRes.data.transactions || []);
     } catch (error) {
       console.error('Error fetching dashboard:', error);
+      // Use fallback data
+      setTransactions([
+        {
+          id: 1,
+          merchant: 'Addis Supermarket',
+          category: 'Shopping',
+          amount: -1200,
+          date: '2024-01-15T10:45:00',
+          status: 'completed'
+        },
+        {
+          id: 2,
+          merchant: 'Salary Deposit',
+          category: 'Income',
+          amount: 45000,
+          date: '2024-01-14T09:00:00',
+          status: 'completed'
+        }
+      ]);
     } finally {
       setLoading(false);
     }
   };
 
-  const formatCurrency = (amount) => {
-    return amount?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00';
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'completed':
-      case 'success':
-        return 'bg-green-100 text-green-700';
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-700';
-      case 'failed':
-        return 'bg-red-100 text-red-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6128ff]"></div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Top Navigation */}
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold bg-gradient-to-r from-[#6128ff] to-[#8a57ea] bg-clip-text text-transparent">
-                EthioPay
-              </span>
-              <span className="text-sm text-gray-400 hidden sm:inline">Secure Digital Banking</span>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              {/* Premium Badge */}
-              <span className="hidden sm:inline-flex items-center gap-1 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium">
-                <UserIcon className="w-3 h-3" />
-                Premium User
-              </span>
-              <button className="p-2 rounded-full hover:bg-gray-100 transition-colors relative">
-                <BellIcon className="w-5 h-5 text-gray-600" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
-              </button>
-              <button
-                onClick={logout}
-                className="text-sm text-gray-600 hover:text-gray-800 transition-colors"
-              >
-                Logout
-              </button>
-              <div className="w-9 h-9 rounded-full bg-gradient-to-r from-[#6128ff] to-[#8a57ea] flex items-center justify-center text-white font-semibold text-sm">
-                {user?.fullName?.charAt(0) || 'U'}
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className={`min-h-screen bg-[#F8FAFC] ${darkMode ? 'dark' : ''}`}>
+      <div className="flex">
+        {/* Sidebar */}
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Welcome */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">
-            Welcome back, {user?.fullName?.split(' ')[0] || 'User'}
-          </h1>
-        </div>
+        {/* Main Content */}
+        <div className={`flex-1 transition-all duration-300 ${
+          sidebarOpen ? 'lg:ml-64' : 'lg:ml-20'
+        }`}>
+          {/* Top Nav */}
+          <TopNav 
+            sidebarOpen={sidebarOpen} 
+            setSidebarOpen={setSidebarOpen}
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
+          />
 
-        {/* Balance Card */}
-        <div className="bg-gradient-to-r from-[#6128ff] to-[#8a57ea] rounded-2xl p-6 text-white mb-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-          <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
-          
-          <div className="relative z-10">
-            <p className="text-sm text-white/80 mb-1">Total Available Balance</p>
-            <p className="text-4xl font-bold">
-              {formatCurrency(balance)} ETB
-            </p>
-            <div className="flex items-center gap-2 mt-2">
-              <span className="text-xs bg-white/20 px-3 py-1 rounded-full">
-                +4 this month
-              </span>
-            </div>
-            <div className="mt-4 flex items-center gap-3">
-              <div className="bg-white/20 px-4 py-2 rounded-xl flex items-center gap-2 text-sm">
-                <CreditCardIcon className="w-4 h-4" />
-                <span>Commercial Bank of Ethiopia - 8829</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Daily Spending */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div className="bg-white rounded-xl p-5 border border-gray-200">
-            <p className="text-sm text-gray-500">Daily Spending</p>
-            <p className="text-2xl font-bold mt-1">{formatCurrency(dailySpending)} ETB</p>
-            <p className="text-sm text-red-500">12% higher than yesterday</p>
-            <div className="mt-3">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Daily Limit: 5,000 ETB</span>
-                <span className="text-gray-700 font-medium">65%</span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                <div className="bg-[#6128ff] h-2 rounded-full" style={{ width: '65%' }}></div>
-              </div>
-            </div>
-          </div>
-
-          {/* Income vs Expense Chart */}
-          <div className="bg-white rounded-xl p-5 border border-gray-200">
-            <div className="flex justify-between items-center">
-              <p className="text-sm text-gray-500">Income vs Expense</p>
-              <span className="text-xs bg-gray-100 px-3 py-1 rounded-full">Last 6 Months ▼</span>
-            </div>
-            <div className="mt-4 flex items-center justify-center h-24 bg-gray-50 rounded-lg">
-              <div className="flex items-end gap-3 h-16">
-                <div className="flex flex-col items-center">
-                  <div className="w-8 bg-[#34a853] rounded-t" style={{ height: '20px' }}></div>
-                  <span className="text-xs text-gray-400 mt-1">May</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <div className="w-8 bg-[#34a853] rounded-t" style={{ height: '32px' }}></div>
-                  <span className="text-xs text-gray-400 mt-1">Jun</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <div className="w-8 bg-[#ea4335] rounded-t" style={{ height: '24px' }}></div>
-                  <span className="text-xs text-gray-400 mt-1">Jul</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <div className="w-8 bg-[#ea4335] rounded-t" style={{ height: '40px' }}></div>
-                  <span className="text-xs text-gray-400 mt-1">Aug</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <div className="w-8 bg-[#34a853] rounded-t" style={{ height: '48px' }}></div>
-                  <span className="text-xs text-gray-400 mt-1">Sep</span>
-                </div>
-                <div className="flex flex-col items-center">
-                  <div className="w-8 bg-[#34a853] rounded-t" style={{ height: '56px' }}></div>
-                  <span className="text-xs text-gray-400 mt-1">Oct</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          {[
-            { icon: BanknotesIcon, label: 'Send Money', path: '/send', color: 'bg-[#6128ff]' },
-            { icon: QrCodeIcon, label: 'QR Pay', path: '/qr', color: 'bg-[#34a853]' },
-            { icon: DocumentTextIcon, label: 'Bills', path: '/bills', color: 'bg-[#ea4335]' },
-            { icon: ArrowPathIcon, label: 'Withdraw', path: '/withdrawals', color: 'bg-[#fbbc04]' },
-          ].map((action, index) => (
-            <Link
-              key={index}
-              to={action.path}
-              className="bg-white rounded-xl p-4 border border-gray-200 hover:shadow-lg hover:border-[#6128ff]/20 transition-all group"
+          {/* Dashboard Content */}
+          <main className="p-4 md:p-6 lg:p-8">
+            {/* Welcome Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mb-6"
             >
-              <div className="flex flex-col items-center text-center">
-                <div className={`${action.color} p-3 rounded-xl text-white mb-2 group-hover:scale-110 transition-transform`}>
-                  <action.icon className="w-5 h-5" />
-                </div>
-                <span className="text-sm font-medium text-gray-700">{action.label}</span>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+                Welcome back, {user?.fullName?.split(' ')[0] || 'User'} 👋
+              </h1>
+              <p className="text-gray-500">Here's what's happening with your money</p>
+            </motion.div>
+
+            {/* Balance Cards Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
+              <div className="lg:col-span-2">
+                <BalanceCard balance={balance} stats={stats} />
               </div>
-            </Link>
-          ))}
-        </div>
-
-        {/* Recent Activity */}
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <div className="flex justify-between items-center p-5 border-b border-gray-100">
-            <h3 className="font-semibold text-gray-800">Recent Activity</h3>
-            <Link
-              to="/transactions"
-              className="text-sm text-[#6128ff] hover:underline flex items-center gap-1"
-            >
-              View All
-              <ArrowRightIcon className="w-4 h-4" />
-            </Link>
-          </div>
-
-          <div className="divide-y divide-gray-100">
-            {transactions.length > 0 ? (
-              transactions.map((tx) => (
-                <div key={tx.id} className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-full ${tx.type === 'send' ? 'bg-red-50' : 'bg-green-50'}`}>
-                      {tx.type === 'send' ? (
-                        <ArrowUpIcon className="w-4 h-4 text-red-500" />
-                      ) : (
-                        <ArrowDownIcon className="w-4 h-4 text-green-500" />
-                      )}
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-800">
-                        {tx.description || tx.type || 'Transaction'}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {new Date(tx.createdAt).toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className={`font-semibold ${tx.type === 'send' ? 'text-red-500' : 'text-green-500'}`}>
-                      {tx.type === 'send' ? '-' : '+'}
-                      {formatCurrency(tx.amount)} ETB
-                    </p>
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${getStatusColor(tx.status)}`}>
-                      {tx.status}
-                    </span>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="p-8 text-center text-gray-500">
-                <p>No transactions yet</p>
+              <div className="lg:col-span-2 grid grid-cols-2 gap-4">
+                <StatCard
+                  icon={TrendingUp}
+                  label="Total Income"
+                  value={`ETB ${stats.income.toLocaleString()}`}
+                  change="+12.4%"
+                  positive={true}
+                  color="green"
+                />
+                <StatCard
+                  icon={TrendingDown}
+                  label="Total Expenses"
+                  value={`ETB ${stats.expenses.toLocaleString()}`}
+                  change="+5.1%"
+                  positive={false}
+                  color="red"
+                />
               </div>
-            )}
-          </div>
-        </div>
+            </div>
 
-        {/* Footer */}
-        <div className="mt-6 text-center text-xs text-gray-400 border-t border-gray-200 pt-4">
-          <p>© 2024 EthioPay. Secured by National Bank of Ethiopia standards.</p>
+            {/* Quick Actions */}
+            <QuickActions />
+
+            {/* Charts Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+              <div className="lg:col-span-2">
+                <Analytics spendingData={spendingData} />
+              </div>
+              <div className="lg:col-span-1">
+                <Insights />
+              </div>
+            </div>
+
+            {/* Bottom Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="lg:col-span-2">
+                <Transactions transactions={transactions} />
+              </div>
+              <div className="lg:col-span-1 space-y-4">
+                <BudgetTracker categoryData={categoryData} />
+                <PaymentCards />
+              </div>
+            </div>
+          </main>
         </div>
       </div>
     </div>
+  );
+};
+
+// Stat Card Component
+const StatCard = ({ icon: Icon, label, value, change, positive, color }) => {
+  const colors = {
+    green: 'bg-green-50 text-green-600',
+    red: 'bg-red-50 text-red-600',
+    blue: 'bg-blue-50 text-blue-600',
+    yellow: 'bg-yellow-50 text-yellow-600'
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="bg-white rounded-2xl p-5 border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+    >
+      <div className="flex items-start justify-between">
+        <div>
+          <p className="text-sm text-gray-500">{label}</p>
+          <p className="text-lg font-bold text-gray-800 mt-1">{value}</p>
+          <p className={`text-xs font-medium ${positive ? 'text-green-600' : 'text-red-600'} mt-1`}>
+            {positive ? '↑' : '↓'} {change}
+          </p>
+        </div>
+        <div className={`p-3 rounded-xl ${colors[color]}`}>
+          <Icon className="w-5 h-5" />
+        </div>
+      </div>
+    </motion.div>
   );
 };
 
