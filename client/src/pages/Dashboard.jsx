@@ -1,4 +1,3 @@
-// client/src/pages/Dashboard.jsx
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
@@ -48,7 +47,6 @@ import Insights from '../components/dashboard/Insights';
 import Transactions from '../components/dashboard/Transactions';
 import BudgetTracker from '../components/dashboard/BudgetTracker';
 import PaymentCards from '../components/dashboard/PaymentCards';
-import Notifications from '../components/dashboard/Notifications';
 import '../../styles/dashboard.css';
 
 const Dashboard = () => {
@@ -90,14 +88,12 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      // Fetch real data from API
       const balanceRes = await transactionService.balance();
       const historyRes = await transactionService.history({ limit: 10 });
       setBalance(balanceRes.data.balance);
       setTransactions(historyRes.data.transactions || []);
     } catch (error) {
       console.error('Error fetching dashboard:', error);
-      // Use fallback data
       setTransactions([
         {
           id: 1,
@@ -120,6 +116,14 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0E7A4B]"></div>
+      </div>
+    );
+  }
 
   return (
     <div className={`min-h-screen bg-[#F8FAFC] ${darkMode ? 'dark' : ''}`}>
@@ -148,10 +152,10 @@ const Dashboard = () => {
               transition={{ duration: 0.5 }}
               className="mb-6"
             >
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
                 Welcome back, {user?.fullName?.split(' ')[0] || 'User'} 👋
               </h1>
-              <p className="text-gray-500">Here's what's happening with your money</p>
+              <p className="text-gray-500 dark:text-gray-400">Here's what's happening with your money</p>
             </motion.div>
 
             {/* Balance Cards Grid */}
@@ -212,10 +216,10 @@ const Dashboard = () => {
 // Stat Card Component
 const StatCard = ({ icon: Icon, label, value, change, positive, color }) => {
   const colors = {
-    green: 'bg-green-50 text-green-600',
-    red: 'bg-red-50 text-red-600',
-    blue: 'bg-blue-50 text-blue-600',
-    yellow: 'bg-yellow-50 text-yellow-600'
+    green: 'bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400',
+    red: 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400',
+    blue: 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400',
+    yellow: 'bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400'
   };
 
   return (
@@ -223,13 +227,13 @@ const StatCard = ({ icon: Icon, label, value, change, positive, color }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-white rounded-2xl p-5 border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+      className="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
     >
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-gray-500">{label}</p>
-          <p className="text-lg font-bold text-gray-800 mt-1">{value}</p>
-          <p className={`text-xs font-medium ${positive ? 'text-green-600' : 'text-red-600'} mt-1`}>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
+          <p className="text-lg font-bold text-gray-800 dark:text-white mt-1">{value}</p>
+          <p className={`text-xs font-medium ${positive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'} mt-1`}>
             {positive ? '↑' : '↓'} {change}
           </p>
         </div>
