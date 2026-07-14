@@ -5,6 +5,7 @@ import './index.css';
 import './styles/landing.css';
 import SendMoney from './pages/SendMoney';
 import Transactions from './pages/Transactions';
+import Bills from './pages/Bills';
 
 // Pages
 import Landing from './pages/Landing';
@@ -43,6 +44,10 @@ function App() {
 } />
 <Route path="/transactions" element={
   <ProtectedRoute><Transactions /></ProtectedRoute>
+} />
+
+    <Route path="/bills" element={
+  <ProtectedRoute><Bills /></ProtectedRoute>
 } />
         </Routes>
       </BrowserRouter>
