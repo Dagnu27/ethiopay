@@ -6,6 +6,7 @@ import './styles/landing.css';
 import SendMoney from './pages/SendMoney';
 import Transactions from './pages/Transactions';
 import Bills from './pages/Bills';
+import QRPay from './pages/QRPay';
 
 // Pages
 import Landing from './pages/Landing';
@@ -48,6 +49,9 @@ function App() {
 
     <Route path="/bills" element={
   <ProtectedRoute><Bills /></ProtectedRoute>
+} />
+<Route path="/qr" element={
+  <ProtectedRoute><QRPay /></ProtectedRoute>
 } />
         </Routes>
       </BrowserRouter>
