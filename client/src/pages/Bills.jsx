@@ -34,26 +34,13 @@ import {
   Car,
   GraduationCap,
   Building,
-  CreditCard as CreditCardIcon,
   Sparkles,
   TrendingUp,
-  TrendingDown,
   Calendar,
-  DollarSign,
-  Percent,
   Shield,
   Gift,
-  Zap as ZapIcon,
-  Eye,
-  EyeOff,
   X,
-  Check,
-  Printer,
-  Share2,
-  Copy,
-  ExternalLink,
   Loader,
-  AlertTriangle,
 } from 'lucide-react';
 import {
   AreaChart,
@@ -63,12 +50,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  BarChart,
-  Bar,
-  Legend,
 } from 'recharts';
 import toast from 'react-hot-toast';
 
@@ -148,22 +129,17 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 };
 
 // ============ STAT CARD ============
-const StatCard = ({ icon: Icon, label, value, subtitle, change, positive, color, delay }) => {
+const StatCard = ({ icon: Icon, label, value, subtitle, change, positive, color }) => {
   const colors = {
-    green: 'bg-green-50 text-green-600 border-green-100',
-    blue: 'bg-blue-50 text-blue-600 border-blue-100',
-    yellow: 'bg-yellow-50 text-yellow-600 border-yellow-100',
-    purple: 'bg-purple-50 text-purple-600 border-purple-100',
-    red: 'bg-red-50 text-red-600 border-red-100',
+    green: 'bg-green-50 text-green-600',
+    blue: 'bg-blue-50 text-blue-600',
+    yellow: 'bg-yellow-50 text-yellow-600',
+    purple: 'bg-purple-50 text-purple-600',
+    red: 'bg-red-50 text-red-600',
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay }}
-      className="bg-white rounded-2xl p-5 border border-gray-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-    >
+    <div className="bg-white rounded-2xl p-5 border border-gray-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-gray-500">{label}</p>
@@ -179,7 +155,7 @@ const StatCard = ({ icon: Icon, label, value, subtitle, change, positive, color,
           <Icon className="w-5 h-5" />
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -197,20 +173,11 @@ const BillCard = ({ bill, onPay }) => {
   };
 
   const getProviderIcon = (provider) => {
-    const icons = {
-      'Electricity': Zap,
-      'Telecom': Wifi,
-      'Water': Droplets,
-      'Internet': Wifi,
-      'TV': Tv,
-      'Rent': HomeIcon,
-      'Fuel': Car,
-      'Education': GraduationCap,
-      'Government': Building,
-      'Loan': CreditCardIcon,
-    };
-    const Icon = icons[provider] || FileText;
-    return <Icon className="w-6 h-6" />;
+    if (provider.includes('Electric')) return <Zap className="w-6 h-6" />;
+    if (provider.includes('Telecom')) return <Wifi className="w-6 h-6" />;
+    if (provider.includes('Water')) return <Droplets className="w-6 h-6" />;
+    if (provider.includes('Internet')) return <Wifi className="w-6 h-6" />;
+    return <FileText className="w-6 h-6" />;
   };
 
   return (
@@ -261,27 +228,6 @@ const BillCard = ({ bill, onPay }) => {
   );
 };
 
-// ============ CATEGORY CARD ============
-const CategoryCard = ({ category, count, amount, icon: Icon, color }) => {
-  return (
-    <motion.div
-      whileHover={{ scale: 1.02 }}
-      className="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition-all duration-300 cursor-pointer"
-    >
-      <div className="flex items-center gap-3">
-        <div className={`w-10 h-10 rounded-xl ${color} flex items-center justify-center text-white`}>
-          <Icon className="w-5 h-5" />
-        </div>
-        <div className="flex-1">
-          <p className="text-sm font-medium text-gray-800">{category}</p>
-          <p className="text-xs text-gray-500">{count} bills • {amount} ETB</p>
-        </div>
-        <ArrowRight className="w-4 h-4 text-gray-400" />
-      </div>
-    </motion.div>
-  );
-};
-
 // ============ MAIN BILLS PAGE ============
 const Bills = () => {
   const { user } = useAuth();
@@ -290,10 +236,10 @@ const Bills = () => {
   const [loading, setLoading] = useState(true);
   const [bills, setBills] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
   const [showPayModal, setShowPayModal] = useState(false);
   const [selectedBill, setSelectedBill] = useState(null);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [processing, setProcessing] = useState(false);
 
   const stats = {
     totalOutstanding: 12450,
@@ -304,21 +250,21 @@ const Bills = () => {
     savings: 450,
   };
 
-  const categories = [
-    { name: 'Electricity', icon: Zap, count: 2, amount: 1200, color: 'bg-yellow-500' },
-    { name: 'Telecom', icon: Wifi, count: 3, amount: 850, color: 'bg-blue-500' },
-    { name: 'Water', icon: Droplets, count: 1, amount: 450, color: 'bg-cyan-500' },
-    { name: 'Internet', icon: Wifi, count: 2, amount: 1500, color: 'bg-purple-500' },
-    { name: 'TV', icon: Tv, count: 1, amount: 350, color: 'bg-red-500' },
-    { name: 'Education', icon: GraduationCap, count: 2, amount: 3000, color: 'bg-green-500' },
-  ];
-
   const sampleBills = [
     { id: 1, provider: 'Ethio Electric (EEP)', account: '88203-11', amount: 1420.50, dueDate: '2024-10-12', status: 'Due Today' },
     { id: 2, provider: 'Ethio Telecom', account: '0911002233', amount: 850.00, dueDate: '2024-10-28', status: 'Due This Week' },
     { id: 3, provider: 'Water Authority', account: 'WA-456-789', amount: 450.00, dueDate: '2024-10-05', status: 'Overdue' },
     { id: 4, provider: 'Addis Academy', account: 'SA-202-01', amount: 12500.00, dueDate: '2024-10-15', status: 'Due Tomorrow' },
     { id: 5, provider: 'Safaricom Ethiopia', account: '0700112233', amount: 350.00, dueDate: '2024-10-20', status: 'Due This Week' },
+  ];
+
+  const chartData = [
+    { month: 'Jan', amount: 3200 },
+    { month: 'Feb', amount: 2800 },
+    { month: 'Mar', amount: 3500 },
+    { month: 'Apr', amount: 3000 },
+    { month: 'May', amount: 3100 },
+    { month: 'Jun', amount: 3400 },
   ];
 
   useEffect(() => {
@@ -342,11 +288,11 @@ const Bills = () => {
   };
 
   const handleConfirmPayment = () => {
-    setLoading(true);
+    setProcessing(true);
     setTimeout(() => {
-      setLoading(false);
+      setProcessing(false);
       setPaymentSuccess(true);
-      toast.success('Bill paid successfully! 🎉');
+      toast.success('✅ Bill paid successfully!');
       setTimeout(() => {
         setShowPayModal(false);
         setPaymentSuccess(false);
@@ -355,20 +301,9 @@ const Bills = () => {
     }, 1500);
   };
 
-  const filteredBills = bills.filter(bill => {
-    const matchesSearch = bill.provider.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || bill.provider === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  const chartData = [
-    { month: 'Jan', utilities: 3200, telecom: 1800, other: 1200 },
-    { month: 'Feb', utilities: 2800, telecom: 1900, other: 1400 },
-    { month: 'Mar', utilities: 3500, telecom: 2000, other: 1100 },
-    { month: 'Apr', utilities: 3000, telecom: 1700, other: 1500 },
-    { month: 'May', utilities: 3100, telecom: 1850, other: 1300 },
-    { month: 'Jun', utilities: 3400, telecom: 1950, other: 1600 },
-  ];
+  const filteredBills = bills.filter(bill =>
+    bill.provider.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
@@ -419,15 +354,15 @@ const Bills = () => {
 
             {/* Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-              <StatCard icon={AlertCircle} label="Outstanding" value={`ETB ${stats.totalOutstanding.toLocaleString()}`} subtitle="Total due" color="red" delay={0} />
-              <StatCard icon={CheckCircle} label="Paid This Month" value={`ETB ${stats.paidThisMonth.toLocaleString()}`} change="+8%" positive color="green" delay={0.1} />
-              <StatCard icon={Calendar} label="Upcoming" value={`ETB ${stats.upcoming.toLocaleString()}`} subtitle="This week" color="blue" delay={0.2} />
-              <StatCard icon={TrendingUp} label="Monthly Spending" value={`ETB ${stats.monthlySpending.toLocaleString()}`} change="+5%" positive color="purple" delay={0.3} />
-              <StatCard icon={Shield} label="AutoPay Active" value={stats.autoPayActive} subtitle="3 bills" color="green" delay={0.4} />
-              <StatCard icon={Gift} label="Savings" value={`ETB ${stats.savings.toLocaleString()}`} change="-2%" positive color="yellow" delay={0.5} />
+              <StatCard icon={AlertCircle} label="Outstanding" value={`ETB ${stats.totalOutstanding.toLocaleString()}`} subtitle="Total due" color="red" />
+              <StatCard icon={CheckCircle} label="Paid This Month" value={`ETB ${stats.paidThisMonth.toLocaleString()}`} change="+8%" positive color="green" />
+              <StatCard icon={Calendar} label="Upcoming" value={`ETB ${stats.upcoming.toLocaleString()}`} subtitle="This week" color="blue" />
+              <StatCard icon={TrendingUp} label="Monthly Spending" value={`ETB ${stats.monthlySpending.toLocaleString()}`} change="+5%" positive color="purple" />
+              <StatCard icon={Shield} label="AutoPay Active" value={stats.autoPayActive} subtitle="3 bills" color="green" />
+              <StatCard icon={Gift} label="Savings" value={`ETB ${stats.savings.toLocaleString()}`} change="-2%" positive color="yellow" />
             </div>
 
-            {/* Search & Filter */}
+            {/* Search */}
             <div className="flex flex-wrap items-center gap-3 mb-6">
               <div className="flex-1 min-w-[200px] relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -439,17 +374,6 @@ const Bills = () => {
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-[#0B7A43] focus:ring-2 focus:ring-[#0B7A43]/20 outline-none transition-all text-sm"
                 />
               </div>
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-[#0B7A43] outline-none text-sm"
-              >
-                <option value="All">All Categories</option>
-                <option value="Electricity">Electricity</option>
-                <option value="Telecom">Telecom</option>
-                <option value="Water">Water</option>
-                <option value="Internet">Internet</option>
-              </select>
               <button className="p-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 transition">
                 <Filter className="w-4 h-4 text-gray-400" />
               </button>
@@ -459,112 +383,65 @@ const Bills = () => {
             </div>
 
             {/* Bill Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-              {filteredBills.map((bill) => (
-                <BillCard key={bill.id} bill={bill} onPay={handlePayBill} />
-              ))}
-            </div>
-
-            {/* Categories Section */}
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Bill Categories</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
-              {categories.map((cat) => (
-                <CategoryCard key={cat.name} {...cat} />
-              ))}
-            </div>
-
-            {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-              <div className="lg:col-span-2 bg-white rounded-2xl p-5 border border-gray-100">
-                <h3 className="font-semibold text-gray-800 mb-4">Monthly Bill Spending</h3>
-                <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={chartData}>
-                      <defs>
-                        <linearGradient id="utilities" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#0B7A43" stopOpacity={0.3} />
-                          <stop offset="95%" stopColor="#0B7A43" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
-                      <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#9CA3AF', fontSize: 12 }} />
-                      <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9CA3AF', fontSize: 12 }} />
-                      <Tooltip />
-                      <Area type="monotone" dataKey="utilities" stroke="#0B7A43" strokeWidth={2} fill="url(#utilities)" />
-                      <Area type="monotone" dataKey="telecom" stroke="#14B86A" strokeWidth={2} fill="none" />
-                      <Area type="monotone" dataKey="other" stroke="#6B7280" strokeWidth={2} fill="none" />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
+            {loading ? (
+              <div className="text-center py-12">Loading bills...</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                {filteredBills.map((bill) => (
+                  <BillCard key={bill.id} bill={bill} onPay={handlePayBill} />
+                ))}
               </div>
+            )}
 
-              <div className="bg-white rounded-2xl p-5 border border-gray-100">
-                <h3 className="font-semibold text-gray-800 mb-4">AI Bill Assistant</h3>
-                <div className="space-y-4">
-                  <div className="p-4 rounded-xl bg-green-50 border border-green-100">
-                    <div className="flex items-start gap-3">
-                      <Sparkles className="w-5 h-5 text-[#0B7A43] mt-0.5" />
-                      <div>
-                        <p className="text-sm font-medium text-gray-800">Electricity Bill</p>
-                        <p className="text-xs text-gray-600 mt-1">
-                          Your electricity bill increased by 12% compared to last month.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-4 rounded-xl bg-blue-50 border border-blue-100">
-                    <div className="flex items-start gap-3">
-                      <Gift className="w-5 h-5 text-blue-600 mt-0.5" />
-                      <div>
-                        <p className="text-sm font-medium text-gray-800">Savings Opportunity</p>
-                        <p className="text-xs text-gray-600 mt-1">
-                          You can save 450 ETB annually by enabling AutoPay.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-4 rounded-xl bg-yellow-50 border border-yellow-100">
-                    <div className="flex items-start gap-3">
-                      <TrendingUp className="w-5 h-5 text-yellow-600 mt-0.5" />
-                      <div>
-                        <p className="text-sm font-medium text-gray-800">Stable Spending</p>
-                        <p className="text-xs text-gray-600 mt-1">
-                          Internet bills have remained stable for the last 6 months.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* AutoPay Section */}
+            {/* Chart Section */}
             <div className="bg-white rounded-2xl p-5 border border-gray-100">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-gray-800">AutoPay Management</h3>
-                <button className="text-sm text-[#0B7A43] font-medium hover:underline">Manage All</button>
+              <h3 className="font-semibold text-gray-800 mb-4">Monthly Bill Spending</h3>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={chartData}>
+                    <defs>
+                      <linearGradient id="billGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#0B7A43" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#0B7A43" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
+                    <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#9CA3AF', fontSize: 12 }} />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9CA3AF', fontSize: 12 }} />
+                    <Tooltip />
+                    <Area type="monotone" dataKey="amount" stroke="#0B7A43" strokeWidth={2} fill="url(#billGrad)" />
+                  </AreaChart>
+                </ResponsiveContainer>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50">
+            </div>
+
+            {/* AI Insights */}
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 rounded-xl bg-green-50 border border-green-100">
+                <div className="flex items-start gap-3">
+                  <Sparkles className="w-5 h-5 text-[#0B7A43] mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">Ethio Electric</p>
-                    <p className="text-xs text-gray-500">Next: Oct 12, 2024</p>
+                    <p className="text-sm font-medium text-gray-800">Electricity Bill</p>
+                    <p className="text-xs text-gray-600">Increased by 12% compared to last month.</p>
                   </div>
-                  <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Active</span>
                 </div>
-                <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50">
+              </div>
+              <div className="p-4 rounded-xl bg-blue-50 border border-blue-100">
+                <div className="flex items-start gap-3">
+                  <Gift className="w-5 h-5 text-blue-600 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">Ethio Telecom</p>
-                    <p className="text-xs text-gray-500">Next: Oct 28, 2024</p>
+                    <p className="text-sm font-medium text-gray-800">Savings Opportunity</p>
+                    <p className="text-xs text-gray-600">Save 450 ETB annually by enabling AutoPay.</p>
                   </div>
-                  <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-600">Inactive</span>
                 </div>
-                <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50">
+              </div>
+              <div className="p-4 rounded-xl bg-yellow-50 border border-yellow-100">
+                <div className="flex items-start gap-3">
+                  <TrendingUp className="w-5 h-5 text-yellow-600 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">Water Authority</p>
-                    <p className="text-xs text-gray-500">Next: Oct 5, 2024</p>
+                    <p className="text-sm font-medium text-gray-800">Stable Spending</p>
+                    <p className="text-xs text-gray-600">Internet bills stable for the last 6 months.</p>
                   </div>
-                  <button className="text-sm text-[#0B7A43] font-medium hover:underline">Enable</button>
                 </div>
               </div>
             </div>
@@ -620,10 +497,10 @@ const Bills = () => {
                       </div>
                       <button
                         onClick={handleConfirmPayment}
-                        disabled={loading}
+                        disabled={processing}
                         className="w-full bg-[#0B7A43] text-white py-3.5 rounded-xl font-semibold hover:bg-[#096336] transition disabled:opacity-50"
                       >
-                        {loading ? (
+                        {processing ? (
                           <span className="flex items-center justify-center gap-2">
                             <Loader className="w-5 h-5 animate-spin" />
                             Processing...
