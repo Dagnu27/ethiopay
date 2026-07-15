@@ -14,6 +14,7 @@ import Transactions from './pages/Transactions';
 import Bills from './pages/Bills';
 import QRPay from './pages/QRPay';
 import Profile from './pages/Profile';
+import Wallet from './pages/Wallet';
 // import Wallet from './pages/Wallet'; // Uncomment when ready
 // import Analytics from './pages/Analytics'; // Uncomment when ready
 // import Settings from './pages/Settings'; // Uncomment when ready
@@ -114,6 +115,10 @@ function App() {
           />
   <Route path="/profile" element={
   <ProtectedRoute><Profile /></ProtectedRoute>
+} />
+
+<Route path="/wallet" element={
+  <ProtectedRoute><Wallet /></ProtectedRoute>
 } />
           {/* Future Routes (Uncomment when pages are created) */}
           {/* 
