@@ -13,7 +13,7 @@ import SendMoney from './pages/SendMoney';
 import Transactions from './pages/Transactions';
 import Bills from './pages/Bills';
 import QRPay from './pages/QRPay';
-// import Profile from './pages/Profile'; // Uncomment when ready
+import Profile from './pages/Profile';
 // import Wallet from './pages/Wallet'; // Uncomment when ready
 // import Analytics from './pages/Analytics'; // Uncomment when ready
 // import Settings from './pages/Settings'; // Uncomment when ready
@@ -112,7 +112,9 @@ function App() {
               </ProtectedRoute>
             }
           />
-
+  <Route path="/profile" element={
+  <ProtectedRoute><Profile /></ProtectedRoute>
+} />
           {/* Future Routes (Uncomment when pages are created) */}
           {/* 
           <Route
