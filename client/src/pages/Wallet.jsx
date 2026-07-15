@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { transactionService } from '../services/api';
 import {
-  Wallet,
+  Wallet as WalletIcon,  // ✅ RENAMED
   CreditCard,
   Plus,
   Send,
@@ -176,7 +176,7 @@ const Wallet = () => {
               <div className="relative z-10">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <Wallet className="w-5 h-5 text-white/80" />
+                    <WalletIcon className="w-5 h-5 text-white/80" />
                     <span className="text-sm text-white/80">Total Balance</span>
                   </div>
                   <button
@@ -234,7 +234,7 @@ const Wallet = () => {
                 darkMode={darkMode}
               />
               <StatCard
-                icon={Wallet}
+                icon={WalletIcon}
                 label="Net Savings"
                 value={`ETB ${stats.savings.toLocaleString()}`}
                 change="+8.2%"

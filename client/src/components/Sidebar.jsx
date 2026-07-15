@@ -34,7 +34,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     { icon: BarChart3, label: 'Analytics', path: '/analytics' },
     { icon: Settings, label: 'Settings', path: '/settings' },
     { icon: Bell, label: 'Notifications', path: '/notifications' },
-  ];
+    ];
 
   // Bottom nav items (optional)
   const bottomNavItems = [

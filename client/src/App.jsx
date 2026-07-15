@@ -14,14 +14,11 @@ import Transactions from './pages/Transactions';
 import Bills from './pages/Bills';
 import QRPay from './pages/QRPay';
 import Profile from './pages/Profile';
-import Wallet from './pages/Wallet';
-// import Wallet from './pages/Wallet'; // Uncomment when ready
-// import Analytics from './pages/Analytics'; // Uncomment when ready
-// import Settings from './pages/Settings'; // Uncomment when ready
-
+import Wallet from './pages/Wallet';  // ✅ Fixed version
+import Analytics from './pages/Analytics';
+import Settings from './pages/Settings';
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
@@ -29,11 +26,7 @@ const ProtectedRoute = ({ children }) => {
       </div>
     );
   }
-  
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-  
+  if (!user) return <Navigate to="/login" replace />;
   return children;
 };
 
@@ -41,123 +34,25 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: '#363636',
-              color: '#fff',
-              borderRadius: '12px',
-            },
-            success: {
-              duration: 3000,
-              iconTheme: {
-                primary: '#0A6E3D',
-                secondary: '#fff',
-              },
-            },
-            error: {
-              duration: 4000,
-              iconTheme: {
-                primary: '#EF4444',
-                secondary: '#fff',
-              },
-            },
-          }}
-        />
+        <Toaster position="top-right" />
         <Routes>
-          {/* Public Routes */}
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-
-          {/* Protected Routes */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/send"
-            element={
-              <ProtectedRoute>
-                <SendMoney />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/transactions"
-            element={
-              <ProtectedRoute>
-                <Transactions />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/bills"
-            element={
-              <ProtectedRoute>
-                <Bills />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/qr"
-            element={
-              <ProtectedRoute>
-                <QRPay />
-              </ProtectedRoute>
-            }
-          />
-  <Route path="/profile" element={
-  <ProtectedRoute><Profile /></ProtectedRoute>
-} />
-
-<Route path="/wallet" element={
-  <ProtectedRoute><Wallet /></ProtectedRoute>
-} />
-          {/* Future Routes (Uncomment when pages are created) */}
-          {/* 
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/wallet"
-            element={
-              <ProtectedRoute>
-                <Wallet />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/analytics"
-            element={
-              <ProtectedRoute>
-                <Analytics />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                <Settings />
-              </ProtectedRoute>
-            }
-          />
-          */}
-
-          {/* 404 - Catch all */}
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/send" element={<ProtectedRoute><SendMoney /></ProtectedRoute>} />
+          <Route path="/transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
+          <Route path="/bills" element={<ProtectedRoute><Bills /></ProtectedRoute>} />
+          <Route path="/qr" element={<ProtectedRoute><QRPay /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/analytics" element={
+  <ProtectedRoute><Analytics /></ProtectedRoute>
+} />
+<Route path="/settings" element={
+  <ProtectedRoute><Settings /></ProtectedRoute>
+} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
