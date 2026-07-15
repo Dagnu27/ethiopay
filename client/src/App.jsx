@@ -17,6 +17,7 @@ import Profile from './pages/Profile';
 import Wallet from './pages/Wallet';  // ✅ Fixed version
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
+import Notifications from './pages/Notifications';
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
   if (loading) {
@@ -52,6 +53,9 @@ function App() {
 } />
 <Route path="/settings" element={
   <ProtectedRoute><Settings /></ProtectedRoute>
+} />
+<Route path="/notifications" element={
+  <ProtectedRoute><Notifications /></ProtectedRoute>
 } />
         </Routes>
       </BrowserRouter>
