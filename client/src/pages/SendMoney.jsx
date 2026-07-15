@@ -10,6 +10,7 @@ import {
   Fingerprint,
   Sparkles,
   CheckCircle,
+  Loader,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -27,14 +28,15 @@ const SendMoney = () => {
   const [note, setNote] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [balance, setBalance] = useState(0);
-
-  const quickAmounts = [100, 500, 1000, 5000];
-  const recentContacts = [
+  const [balance, setBalance] = useState(null);
+  const [balanceLoading, setBalanceLoading] = useState(true);
+  const [recentContacts] = useState([
     { name: 'Selamawit T.', email: 'selam@email.com', initial: 'S' },
     { name: 'Abebe K.', email: 'abebe@email.com', initial: 'A' },
     { name: 'Helen G.', email: 'helen@email.com', initial: 'H' },
-  ];
+  ]);
+
+  const quickAmounts = [100, 500, 1000, 5000];
 
   // Fetch balance on mount
   useEffect(() => {
@@ -42,12 +44,15 @@ const SendMoney = () => {
   }, []);
 
   const fetchBalance = async () => {
+    setBalanceLoading(true);
     try {
       const response = await transactionService.balance();
       setBalance(response.data.balance);
     } catch (error) {
       console.error('Error fetching balance:', error);
       setBalance(124580); // Fallback
+    } finally {
+      setBalanceLoading(false);
     }
   };
 
@@ -62,9 +67,15 @@ const SendMoney = () => {
       return;
     }
 
+    // Check if amount exceeds balance
+    const totalAmount = calculateTotal();
+    if (totalAmount > balance) {
+      toast.error(`Insufficient balance. You need ${totalAmount.toFixed(2)} ETB`);
+      return;
+    }
+
     setLoading(true);
     try {
-      // Actual API call
       const response = await transactionService.send({
         receiverEmail: receiver,
         amount: parseFloat(amount),
@@ -95,6 +106,10 @@ const SendMoney = () => {
   const calculateTotal = () => {
     if (!amount) return 0;
     return parseFloat(amount) + calculateFee();
+  };
+
+  const formatCurrency = (value) => {
+    return value?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00';
   };
 
   return (
@@ -177,7 +192,7 @@ const SendMoney = () => {
                     <div>
                       <p className="text-sm text-white/80">Amount</p>
                       <p className="text-xs text-white/60">
-                        Balance: {balance.toLocaleString()} ETB
+                        Balance: {balanceLoading ? '...' : `${formatCurrency(balance)} ETB`}
                       </p>
                     </div>
                   </div>
@@ -230,10 +245,15 @@ const SendMoney = () => {
                     </div>
                     <div className="pt-3 border-t border-gray-100 dark:border-gray-700 flex justify-between">
                       <span className="font-semibold text-gray-800 dark:text-white">Total</span>
-                      <span className="text-xl font-bold text-[#0B7A43]">
+                      <span className={`text-xl font-bold ${calculateTotal() > balance ? 'text-red-500' : 'text-[#0B7A43]'}`}>
                         {calculateTotal().toFixed(2)} ETB
                       </span>
                     </div>
+                    {calculateTotal() > balance && balance !== null && (
+                      <p className="text-xs text-red-500 mt-1">
+                        Insufficient balance. You need {calculateTotal().toFixed(2)} ETB
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -258,15 +278,12 @@ const SendMoney = () => {
                 {/* Send Button */}
                 <button
                   onClick={handleSend}
-                  disabled={loading || success}
+                  disabled={loading || success || (calculateTotal() > balance && balance !== null)}
                   className="w-full bg-gradient-to-r from-[#0B7A43] to-[#13B86C] text-white py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl hover:shadow-[#0B7A43]/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {loading ? (
                     <span className="flex items-center gap-2">
-                      <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
+                      <Loader className="w-5 h-5 animate-spin" />
                       Processing...
                     </span>
                   ) : success ? (

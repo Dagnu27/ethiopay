@@ -1,193 +1,48 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { qrService } from '../services/api';
 import {
-  Home,
-  Wallet,
-  Send,
   QrCode,
-  FileText,
-  BarChart3,
-  Settings,
-  CreditCard,
-  Bell,
-  User,
-  Plus,
-  Search,
-  Menu,
-  ChevronDown,
-  MoreHorizontal,
-  Download,
-  RefreshCw,
-  Filter,
-  ArrowRight,
-  CheckCircle,
-  Clock,
-  AlertCircle,
-  Zap,
+  TrendingUp,
+  Calendar,
+  Shield,
+  DollarSign,
+  Building2,
   Camera,
-  Upload,
+  Scan,
+  Coffee,
+  Gift,
+  Sparkles,
+  Star,
+  Plus,
+  Bell,
+  Smartphone,
+  Download,
   Share2,
   Copy,
   Printer,
-  Eye,
-  EyeOff,
+  CheckCircle,
   X,
-  Check,
   Loader,
-  Shield,
-  Fingerprint,
-  Sparkles,
-  TrendingUp,
-  TrendingDown,
-  Calendar,
-  DollarSign,
-  Percent,
-  Gift,
-  MapPin,
-  Star,
-  Coffee,
-  Utensils,
-  ShoppingBag,
-  Fuel,
-  Bus,
-  Hotel,
-  Ticket,
-  Heart,
-  Building2,
-  Scan,
-  QrCode as QrCodeIcon,
-  Smartphone,
-  Globe,
-  Lock,
-  ShieldCheck,
-  Award,
-  Zap as ZapIcon,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-// ============ SIDEBAR ============
-const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
-  const location = window.location;
-  const { user } = useAuth();
-
-  const navItems = [
-    { icon: Home, label: 'Dashboard', path: '/dashboard' },
-    { icon: Wallet, label: 'Wallet', path: '/wallet' },
-    { icon: Send, label: 'Send Money', path: '/send' },
-    { icon: FileText, label: 'Transactions', path: '/transactions' },
-    { icon: CreditCard, label: 'Bills', path: '/bills' },
-    { icon: QrCode, label: 'QR Pay', path: '/qr' },
-    { icon: BarChart3, label: 'Analytics', path: '/analytics' },
-    { icon: Settings, label: 'Settings', path: '/settings' },
-  ];
-
-  return (
-    <>
-      {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
-      )}
-      <aside className={`fixed left-0 top-0 h-full bg-white border-r border-gray-100 z-50 flex flex-col transition-all duration-300 ${
-        sidebarOpen ? 'w-[280px]' : 'w-20'
-      }`}>
-        <div className={`flex items-center h-16 px-4 border-b border-gray-100 ${!sidebarOpen ? 'justify-center' : ''}`}>
-          <Link to="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-[#0B7A43] rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-sm">E</span>
-            </div>
-            {sidebarOpen && <span className="text-xl font-bold text-[#0B7A43]">EthioPay</span>}
-          </Link>
-        </div>
-
-        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
-                location.pathname === item.path
-                  ? 'bg-[#0B7A43] text-white shadow-lg shadow-[#0B7A43]/20'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-[#0B7A43]'
-              }`}
-            >
-              <item.icon className="w-5 h-5 flex-shrink-0" />
-              {sidebarOpen && <span className="text-sm font-medium">{item.label}</span>}
-            </Link>
-          ))}
-        </nav>
-
-        <div className={`border-t border-gray-100 p-3 ${!sidebarOpen ? 'flex justify-center' : ''}`}>
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#0B7A43] flex items-center justify-center text-white font-semibold text-sm">
-              {user?.fullName?.charAt(0) || 'U'}
-            </div>
-            {sidebarOpen && (
-              <div>
-                <p className="text-sm font-medium text-gray-800 truncate">{user?.fullName || 'User'}</p>
-                <p className="text-xs text-gray-500 truncate">{user?.email || 'user@email.com'}</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="absolute -right-3 top-20 hidden lg:flex items-center justify-center w-6 h-6 bg-white border border-gray-200 rounded-full shadow-md hover:shadow-lg transition"
-        >
-          <ChevronDown className={`w-3.5 h-3.5 text-gray-600 transform ${sidebarOpen ? 'rotate-90' : '-rotate-90'}`} />
-        </button>
-      </aside>
-    </>
-  );
-};
-
-// ============ STAT CARD ============
-const StatCard = ({ icon: Icon, label, value, subtitle, change, positive, color }) => {
-  const colors = {
-    green: 'bg-green-50 text-green-600',
-    blue: 'bg-blue-50 text-blue-600',
-    yellow: 'bg-yellow-50 text-yellow-600',
-    purple: 'bg-purple-50 text-purple-600',
-    red: 'bg-red-50 text-red-600',
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="bg-white rounded-2xl p-5 border border-gray-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-    >
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-sm text-gray-500">{label}</p>
-          <p className="text-2xl font-bold text-gray-800 mt-1">{value}</p>
-          {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
-          {change && (
-            <p className={`text-xs font-medium ${positive ? 'text-green-600' : 'text-red-600'} mt-1`}>
-              {positive ? '↑' : '↓'} {change}
-            </p>
-          )}
-        </div>
-        <div className={`p-3 rounded-xl ${colors[color]}`}>
-          <Icon className="w-5 h-5" />
-        </div>
-      </div>
-    </motion.div>
-  );
-};
+// Import shared components
+import Sidebar from '../components/Sidebar';
+import TopNav from '../components/TopNav';
+import StatCard from '../components/StatCard';
 
 // ============ QR CARD ============
-const QrCard = ({ user }) => {
+const QrCard = ({ user, darkMode }) => {
   const [qrValue] = useState('EP-123456789');
 
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="relative overflow-hidden bg-gradient-to-br from-[#0B7A43] via-[#14B86A] to-[#0B7A43] rounded-2xl p-6 text-white"
+      className={`relative overflow-hidden bg-gradient-to-br from-[#0B7A43] via-[#14B86A] to-[#0B7A43] rounded-2xl p-6 text-white`}
     >
       <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 animate-pulse" />
       <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
@@ -211,7 +66,7 @@ const QrCard = ({ user }) => {
 
         <div className="flex justify-center my-6">
           <div className="bg-white p-4 rounded-2xl shadow-2xl">
-            <QrCodeIcon className="w-48 h-48 text-[#0B7A43]" />
+            <QrCode className="w-48 h-48 text-[#0B7A43]" />
           </div>
         </div>
 
@@ -241,7 +96,7 @@ const QrCard = ({ user }) => {
 };
 
 // ============ SCAN SECTION ============
-const ScanSection = () => {
+const ScanSection = ({ darkMode }) => {
   const [isScanning, setIsScanning] = useState(false);
   const [scanResult, setScanResult] = useState(null);
 
@@ -262,9 +117,9 @@ const ScanSection = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-2xl p-5 border border-gray-100"
+      className={`bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700`}
     >
-      <h3 className="font-semibold text-gray-800 mb-4">Scan to Pay</h3>
+      <h3 className="font-semibold text-gray-800 dark:text-white mb-4">Scan to Pay</h3>
       
       {isScanning ? (
         <div className="relative aspect-square max-w-xs mx-auto">
@@ -282,19 +137,19 @@ const ScanSection = () => {
         </div>
       ) : scanResult ? (
         <div className="text-center py-8">
-          <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-            <CheckCircle className="w-8 h-8 text-green-600" />
+          <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-4">
+            <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
           </div>
-          <h4 className="font-semibold text-gray-800">QR Scanned!</h4>
-          <p className="text-sm text-gray-500">{scanResult.merchant}</p>
-          <p className="text-2xl font-bold text-[#0B7A43] mt-2">{scanResult.amount} ETB</p>
+          <h4 className="font-semibold text-gray-800 dark:text-white">QR Scanned!</h4>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{scanResult.merchant}</p>
+          <p className="text-2xl font-bold text-[#0B7A43] dark:text-[#14B86A] mt-2">{scanResult.amount} ETB</p>
           <div className="flex gap-3 mt-4">
             <button className="flex-1 bg-[#0B7A43] text-white py-2.5 rounded-xl font-medium hover:bg-[#096336] transition">
               Pay Now
             </button>
             <button 
               onClick={() => setScanResult(null)}
-              className="flex-1 border border-gray-200 py-2.5 rounded-xl hover:bg-gray-50 transition"
+              className="flex-1 border border-gray-200 dark:border-gray-700 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition"
             >
               Cancel
             </button>
@@ -302,8 +157,8 @@ const ScanSection = () => {
         </div>
       ) : (
         <div className="text-center py-8">
-          <div className="w-24 h-24 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <Camera className="w-12 h-12 text-gray-300" />
+          <div className="w-24 h-24 bg-gray-50 dark:bg-gray-700/50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Camera className="w-12 h-12 text-gray-300 dark:text-gray-500" />
           </div>
           <button
             onClick={handleScan}
@@ -312,7 +167,7 @@ const ScanSection = () => {
             <Scan className="w-5 h-5" />
             Start Scanning
           </button>
-          <p className="text-xs text-gray-400 mt-3">Allow camera access to scan QR codes</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-3">Allow camera access to scan QR codes</p>
         </div>
       )}
     </motion.div>
@@ -320,42 +175,46 @@ const ScanSection = () => {
 };
 
 // ============ MERCHANT CARD ============
-const MerchantCard = ({ merchant }) => {
+const MerchantCard = ({ merchant, darkMode }) => {
   const getIcon = (category) => {
     const icons = {
       'Coffee': Coffee,
-      'Restaurant': Utensils,
-      'Supermarket': ShoppingBag,
-      'Fuel': Fuel,
-      'Transport': Bus,
-      'Hotel': Hotel,
-      'Entertainment': Ticket,
+      'Restaurant': '🍽️',
+      'Supermarket': '🛒',
+      'Fuel': '⛽',
+      'Transport': '🚌',
+      'Hotel': '🏨',
+      'Entertainment': '🎟️',
       'Telecom': Smartphone,
     };
     const Icon = icons[category] || Building2;
-    return <Icon className="w-5 h-5" />;
+    return typeof Icon === 'string' ? (
+      <span className="text-xl">{Icon}</span>
+    ) : (
+      <Icon className="w-5 h-5" />
+    );
   };
 
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      className="bg-white rounded-2xl p-4 border border-gray-100 hover:shadow-lg transition-all duration-300 cursor-pointer"
+      className={`bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all duration-300 cursor-pointer`}
     >
       <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-xl bg-[#0B7A43]/10 flex items-center justify-center text-[#0B7A43]">
+        <div className="w-12 h-12 rounded-xl bg-[#0B7A43]/10 dark:bg-[#0B7A43]/20 flex items-center justify-center text-[#0B7A43] dark:text-[#14B86A]">
           {getIcon(merchant.category)}
         </div>
         <div className="flex-1">
-          <p className="font-medium text-gray-800">{merchant.name}</p>
-          <p className="text-xs text-gray-500">{merchant.category}</p>
+          <p className="font-medium text-gray-800 dark:text-white">{merchant.name}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">{merchant.category}</p>
         </div>
-        <button className="p-2 rounded-lg hover:bg-gray-100 transition">
+        <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
           <Star className="w-4 h-4 text-gray-300 hover:text-yellow-400 transition" />
         </button>
       </div>
       <div className="mt-2 flex items-center justify-between text-sm">
-        <span className="text-gray-500">Last payment</span>
-        <span className="font-medium text-gray-800">{merchant.lastAmount} ETB</span>
+        <span className="text-gray-500 dark:text-gray-400">Last payment</span>
+        <span className="font-medium text-gray-800 dark:text-white">{merchant.lastAmount} ETB</span>
       </div>
     </motion.div>
   );
@@ -364,7 +223,10 @@ const MerchantCard = ({ merchant }) => {
 // ============ MAIN QR PAY PAGE ============
 const QRPay = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const stats = {
     totalPayments: 124,
@@ -378,98 +240,128 @@ const QRPay = () => {
   const merchants = [
     { id: 1, name: 'Ethiopian Airlines', category: 'Transport', lastAmount: 2500 },
     { id: 2, name: 'Ethio Telecom', category: 'Telecom', lastAmount: 350 },
-    { id: 3, name: 'Kaldi\'s Coffee', category: 'Coffee', lastAmount: 180 },
+    { id: 3, name: "Kaldi's Coffee", category: 'Coffee', lastAmount: 180 },
     { id: 4, name: 'Shoa Supermarket', category: 'Supermarket', lastAmount: 850 },
   ];
 
   const recentTransactions = [
-    { id: 1, merchant: 'Kaldi\'s Coffee', amount: 180, date: 'Today, 10:45 AM', status: 'Completed' },
+    { id: 1, merchant: "Kaldi's Coffee", amount: 180, date: 'Today, 10:45 AM', status: 'Completed' },
     { id: 2, merchant: 'Ethio Telecom', amount: 350, date: 'Today, 09:15 AM', status: 'Completed' },
     { id: 3, merchant: 'Shoa Supermarket', amount: 850, date: 'Yesterday', status: 'Pending' },
   ];
 
+  useEffect(() => {
+    fetchQRData();
+  }, []);
+
+  const fetchQRData = async () => {
+    try {
+      // In a real app, fetch QR data from API
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching QR data:', error);
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className={`min-h-screen bg-[#F8FAFC] dark:bg-gray-900 transition-colors duration-300`}>
       <div className="flex">
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-20'}`}>
-          {/* Top Nav */}
-          <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
-            <div className="flex items-center justify-between px-4 md:px-6 h-16">
-              <div className="flex items-center gap-3 flex-1">
-                <button
-                  onClick={() => setSidebarOpen(!sidebarOpen)}
-                  className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition"
-                >
-                  <Menu className="w-5 h-5 text-gray-600" />
-                </button>
-                <h1 className="text-lg font-bold text-gray-800">QR Payments</h1>
-              </div>
+          <TopNav 
+            sidebarOpen={sidebarOpen} 
+            setSidebarOpen={setSidebarOpen}
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
+          />
 
-              <div className="flex items-center gap-2">
-                <div className="hidden md:flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2">
-                  <span className="text-sm text-gray-500">Balance:</span>
-                  <span className="text-sm font-bold text-[#0B7A43]">ETB 124,580</span>
-                </div>
-                <button className="hidden sm:flex items-center gap-2 px-4 py-2 bg-[#0B7A43] text-white rounded-xl text-sm font-medium hover:bg-[#096336] transition shadow-lg shadow-[#0B7A43]/25">
-                  <Plus className="w-4 h-4" />
-                  Add Funds
-                </button>
-                <button className="p-2 rounded-lg hover:bg-gray-100 transition relative">
-                  <Bell className="w-5 h-5 text-gray-600" />
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
-                </button>
-                <div className="w-8 h-8 rounded-full bg-[#0B7A43] flex items-center justify-center text-white font-semibold text-sm">
-                  {user?.fullName?.charAt(0) || 'U'}
-                </div>
-              </div>
-            </div>
-          </header>
-
-          {/* Main Content */}
           <main className="p-4 md:p-6 lg:p-8">
             {/* Page Header */}
             <div className="mb-6">
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-800">QR Payments</h1>
-              <p className="text-gray-500">Pay, receive, and manage QR transactions instantly.</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">QR Payments</h1>
+              <p className="text-gray-500 dark:text-gray-400">Pay, receive, and manage QR transactions instantly.</p>
             </div>
 
             {/* Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-              <StatCard icon={QrCode} label="Total Payments" value={stats.totalPayments} subtitle="All time" color="green" />
-              <StatCard icon={TrendingUp} label="Revenue" value={`ETB ${stats.revenue.toLocaleString()}`} change="+12%" positive color="blue" />
-              <StatCard icon={Calendar} label="Today" value={stats.today} subtitle="Transactions" color="purple" />
-              <StatCard icon={Building2} label="Merchants" value={stats.merchants} subtitle="Active" color="yellow" />
-              <StatCard icon={Shield} label="Success Rate" value={`${stats.successRate}%`} subtitle="Secure" color="green" />
-              <StatCard icon={DollarSign} label="Avg Value" value={`ETB ${stats.avgValue}`} subtitle="Per payment" color="blue" />
+              <StatCard 
+                icon={QrCode} 
+                label="Total Payments" 
+                value={stats.totalPayments} 
+                subtitle="All time" 
+                color="green" 
+                darkMode={darkMode}
+              />
+              <StatCard 
+                icon={TrendingUp} 
+                label="Revenue" 
+                value={`ETB ${stats.revenue.toLocaleString()}`} 
+                change="+12%" 
+                positive={true} 
+                color="blue" 
+                darkMode={darkMode}
+              />
+              <StatCard 
+                icon={Calendar} 
+                label="Today" 
+                value={stats.today} 
+                subtitle="Transactions" 
+                color="purple" 
+                darkMode={darkMode}
+              />
+              <StatCard 
+                icon={Building2} 
+                label="Merchants" 
+                value={stats.merchants} 
+                subtitle="Active" 
+                color="yellow" 
+                darkMode={darkMode}
+              />
+              <StatCard 
+                icon={Shield} 
+                label="Success Rate" 
+                value={`${stats.successRate}%`} 
+                subtitle="Secure" 
+                color="green" 
+                darkMode={darkMode}
+              />
+              <StatCard 
+                icon={DollarSign} 
+                label="Avg Value" 
+                value={`ETB ${stats.avgValue}`} 
+                subtitle="Per payment" 
+                color="blue" 
+                darkMode={darkMode}
+              />
             </div>
 
             {/* Main Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               {/* Left Column - QR Code */}
               <div className="lg:col-span-1">
-                <QrCard user={user} />
+                <QrCard user={user} darkMode={darkMode} />
               </div>
 
               {/* Right Column - Scanner & Quick Pay */}
               <div className="lg:col-span-2 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <ScanSection />
+                  <ScanSection darkMode={darkMode} />
                   
                   {/* Quick Pay */}
-                  <div className="bg-white rounded-2xl p-5 border border-gray-100">
-                    <h3 className="font-semibold text-gray-800 mb-4">Quick Pay</h3>
+                  <div className={`bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700`}>
+                    <h3 className="font-semibold text-gray-800 dark:text-white mb-4">Quick Pay</h3>
                     <div className="space-y-3">
                       <input
                         type="text"
                         placeholder="EthioPay ID or Phone"
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0B7A43] focus:ring-2 focus:ring-[#0B7A43]/20 outline-none transition-all"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 focus:border-[#0B7A43] focus:ring-2 focus:ring-[#0B7A43]/20 outline-none transition-all dark:text-white dark:placeholder-gray-400"
                       />
                       <input
                         type="number"
                         placeholder="Amount (ETB)"
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0B7A43] focus:ring-2 focus:ring-[#0B7A43]/20 outline-none transition-all"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 focus:border-[#0B7A43] focus:ring-2 focus:ring-[#0B7A43]/20 outline-none transition-all dark:text-white dark:placeholder-gray-400"
                       />
                       <button className="w-full bg-[#0B7A43] text-white py-3 rounded-xl font-medium hover:bg-[#096336] transition">
                         Pay Securely
@@ -479,25 +371,26 @@ const QRPay = () => {
                 </div>
 
                 {/* Recent Transactions */}
-                <div className="bg-white rounded-2xl p-5 border border-gray-100">
-                  <h3 className="font-semibold text-gray-800 mb-4">Recent QR Payments</h3>
+                <div className={`bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700`}>
+                  <h3 className="font-semibold text-gray-800 dark:text-white mb-4">Recent QR Payments</h3>
                   <div className="space-y-3">
                     {recentTransactions.map((tx) => (
-                      <div key={tx.id} className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition">
+                      <div key={tx.id} className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-[#0B7A43]/10 flex items-center justify-center text-[#0B7A43]">
+                          <div className="w-10 h-10 rounded-xl bg-[#0B7A43]/10 dark:bg-[#0B7A43]/20 flex items-center justify-center text-[#0B7A43] dark:text-[#14B86A]">
                             <QrCode className="w-5 h-5" />
                           </div>
                           <div>
-                            <p className="font-medium text-gray-800">{tx.merchant}</p>
-                            <p className="text-xs text-gray-500">{tx.date}</p>
+                            <p className="font-medium text-gray-800 dark:text-white">{tx.merchant}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">{tx.date}</p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold text-gray-800">{tx.amount} ETB</p>
+                          <p className="font-semibold text-gray-800 dark:text-white">{tx.amount} ETB</p>
                           <span className={`text-xs px-2 py-0.5 rounded-full ${
-                            tx.status === 'Completed' ? 'bg-green-100 text-green-700' :
-                            'bg-yellow-100 text-yellow-700'
+                            tx.status === 'Completed' 
+                              ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' 
+                              : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
                           }`}>
                             {tx.status}
                           </span>
@@ -511,40 +404,40 @@ const QRPay = () => {
 
             {/* Merchants Grid */}
             <div className="mt-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Recent Merchants</h3>
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Recent Merchants</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {merchants.map((merchant) => (
-                  <MerchantCard key={merchant.id} merchant={merchant} />
+                  <MerchantCard key={merchant.id} merchant={merchant} darkMode={darkMode} />
                 ))}
               </div>
             </div>
 
             {/* AI Insights */}
             <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 rounded-xl bg-green-50 border border-green-100">
+              <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800">
                 <div className="flex items-start gap-3">
-                  <Sparkles className="w-5 h-5 text-[#0B7A43] mt-0.5" />
+                  <Sparkles className="w-5 h-5 text-[#0B7A43] dark:text-green-400 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">QR Usage</p>
-                    <p className="text-xs text-gray-600">You made 23 QR payments this month.</p>
+                    <p className="text-sm font-medium text-gray-800 dark:text-white">QR Usage</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">You made 23 QR payments this month.</p>
                   </div>
                 </div>
               </div>
-              <div className="p-4 rounded-xl bg-yellow-50 border border-yellow-100">
+              <div className="p-4 rounded-xl bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-100 dark:border-yellow-800">
                 <div className="flex items-start gap-3">
-                  <Coffee className="w-5 h-5 text-yellow-600 mt-0.5" />
+                  <Coffee className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">Spending Insight</p>
-                    <p className="text-xs text-gray-600">Coffee is 18% of your QR spending.</p>
+                    <p className="text-sm font-medium text-gray-800 dark:text-white">Spending Insight</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">Coffee is 18% of your QR spending.</p>
                   </div>
                 </div>
               </div>
-              <div className="p-4 rounded-xl bg-blue-50 border border-blue-100">
+              <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800">
                 <div className="flex items-start gap-3">
-                  <Gift className="w-5 h-5 text-blue-600 mt-0.5" />
+                  <Gift className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">Savings</p>
-                    <p className="text-xs text-gray-600">Saved 125 ETB using QR merchant discounts.</p>
+                    <p className="text-sm font-medium text-gray-800 dark:text-white">Savings</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">Saved 125 ETB using QR merchant discounts.</p>
                   </div>
                 </div>
               </div>

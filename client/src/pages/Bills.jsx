@@ -1,46 +1,28 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { billService } from '../services/api';
 import {
-  Home,
-  Wallet,
-  Send,
-  QrCode,
   FileText,
-  BarChart3,
-  Settings,
-  CreditCard,
-  Bell,
-  User,
-  Plus,
   Search,
-  Menu,
-  ChevronDown,
-  MoreHorizontal,
-  Download,
-  RefreshCw,
+  Plus,
+  Bell,
   Filter,
-  ArrowRight,
-  CheckCircle,
-  Clock,
+  RefreshCw,
   AlertCircle,
+  CheckCircle,
+  Calendar,
+  TrendingUp,
+  Shield,
+  Gift,
+  Sparkles,
+  X,
+  Loader,
+  MoreHorizontal,
   Zap,
   Droplets,
   Wifi,
-  Tv,
-  Home as HomeIcon,
-  Car,
-  GraduationCap,
-  Building,
-  Sparkles,
-  TrendingUp,
-  Calendar,
-  Shield,
-  Gift,
-  X,
-  Loader,
 } from 'lucide-react';
 import {
   AreaChart,
@@ -53,186 +35,16 @@ import {
 } from 'recharts';
 import toast from 'react-hot-toast';
 
-// ============ SIDEBAR ============
-const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
-  const location = window.location;
-  const { user } = useAuth();
+// Import shared components
+import Sidebar from '../components/Sidebar';
+import TopNav from '../components/TopNav';
+import StatCard from '../components/StatCard';
 
-  const navItems = [
-    { icon: Home, label: 'Dashboard', path: '/dashboard' },
-    { icon: Wallet, label: 'Wallet', path: '/wallet' },
-    { icon: Send, label: 'Send Money', path: '/send' },
-    { icon: FileText, label: 'Transactions', path: '/transactions' },
-    { icon: CreditCard, label: 'Bills', path: '/bills' },
-    { icon: QrCode, label: 'QR Payments', path: '/qr' },
-    { icon: BarChart3, label: 'Analytics', path: '/analytics' },
-    { icon: Settings, label: 'Settings', path: '/settings' },
-  ];
-
-  return (
-    <>
-      {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
-      )}
-      <aside className={`fixed left-0 top-0 h-full bg-white border-r border-gray-100 z-50 flex flex-col transition-all duration-300 ${
-        sidebarOpen ? 'w-[280px]' : 'w-20'
-      }`}>
-        <div className={`flex items-center h-16 px-4 border-b border-gray-100 ${!sidebarOpen ? 'justify-center' : ''}`}>
-          <Link to="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-[#0B7A43] rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-sm">E</span>
-            </div>
-            {sidebarOpen && <span className="text-xl font-bold text-[#0B7A43]">EthioPay</span>}
-          </Link>
-        </div>
-
-        <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
-                location.pathname === item.path
-                  ? 'bg-[#0B7A43] text-white shadow-lg shadow-[#0B7A43]/20'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-[#0B7A43]'
-              }`}
-            >
-              <item.icon className="w-5 h-5 flex-shrink-0" />
-              {sidebarOpen && <span className="text-sm font-medium">{item.label}</span>}
-            </Link>
-          ))}
-        </nav>
-
-        <div className={`border-t border-gray-100 p-3 ${!sidebarOpen ? 'flex justify-center' : ''}`}>
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#0B7A43] flex items-center justify-center text-white font-semibold text-sm">
-              {user?.fullName?.charAt(0) || 'U'}
-            </div>
-            {sidebarOpen && (
-              <div>
-                <p className="text-sm font-medium text-gray-800 truncate">{user?.fullName || 'User'}</p>
-                <p className="text-xs text-gray-500 truncate">{user?.email || 'user@email.com'}</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="absolute -right-3 top-20 hidden lg:flex items-center justify-center w-6 h-6 bg-white border border-gray-200 rounded-full shadow-md hover:shadow-lg transition"
-        >
-          <ChevronDown className={`w-3.5 h-3.5 text-gray-600 transform ${sidebarOpen ? 'rotate-90' : '-rotate-90'}`} />
-        </button>
-      </aside>
-    </>
-  );
-};
-
-// ============ STAT CARD ============
-const StatCard = ({ icon: Icon, label, value, subtitle, change, positive, color }) => {
-  const colors = {
-    green: 'bg-green-50 text-green-600',
-    blue: 'bg-blue-50 text-blue-600',
-    yellow: 'bg-yellow-50 text-yellow-600',
-    purple: 'bg-purple-50 text-purple-600',
-    red: 'bg-red-50 text-red-600',
-  };
-
-  return (
-    <div className="bg-white rounded-2xl p-5 border border-gray-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-sm text-gray-500">{label}</p>
-          <p className="text-2xl font-bold text-gray-800 mt-1">{value}</p>
-          {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
-          {change && (
-            <p className={`text-xs font-medium ${positive ? 'text-green-600' : 'text-red-600'} mt-1`}>
-              {positive ? '↑' : '↓'} {change}
-            </p>
-          )}
-        </div>
-        <div className={`p-3 rounded-xl ${colors[color]}`}>
-          <Icon className="w-5 h-5" />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ============ BILL CARD ============
-const BillCard = ({ bill, onPay }) => {
-  const getStatusColor = (status) => {
-    const colors = {
-      'Due Today': 'bg-red-100 text-red-700',
-      'Due Tomorrow': 'bg-yellow-100 text-yellow-700',
-      'Due This Week': 'bg-blue-100 text-blue-700',
-      'Paid': 'bg-green-100 text-green-700',
-      'Overdue': 'bg-red-100 text-red-700',
-    };
-    return colors[status] || 'bg-gray-100 text-gray-700';
-  };
-
-  const getProviderIcon = (provider) => {
-    if (provider.includes('Electric')) return <Zap className="w-6 h-6" />;
-    if (provider.includes('Telecom')) return <Wifi className="w-6 h-6" />;
-    if (provider.includes('Water')) return <Droplets className="w-6 h-6" />;
-    if (provider.includes('Internet')) return <Wifi className="w-6 h-6" />;
-    return <FileText className="w-6 h-6" />;
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4 }}
-      className="bg-white rounded-2xl p-5 border border-gray-100 hover:shadow-xl transition-all duration-300"
-    >
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-[#0B7A43]/10 flex items-center justify-center text-[#0B7A43]">
-            {getProviderIcon(bill.provider)}
-          </div>
-          <div>
-            <h4 className="font-semibold text-gray-800">{bill.provider}</h4>
-            <p className="text-sm text-gray-500">Account: {bill.account}</p>
-          </div>
-        </div>
-        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${getStatusColor(bill.status)}`}>
-          {bill.status}
-        </span>
-      </div>
-
-      <div className="mt-4 flex items-center justify-between">
-        <div>
-          <p className="text-xs text-gray-500">Due Date</p>
-          <p className="text-sm font-medium text-gray-800">{bill.dueDate}</p>
-        </div>
-        <div className="text-right">
-          <p className="text-xs text-gray-500">Amount</p>
-          <p className="text-lg font-bold text-gray-800">{bill.amount} ETB</p>
-        </div>
-      </div>
-
-      <div className="mt-4 flex items-center gap-2">
-        <button
-          onClick={() => onPay(bill)}
-          className="flex-1 bg-[#0B7A43] text-white py-2.5 rounded-xl text-sm font-medium hover:bg-[#096336] transition"
-        >
-          Pay Now
-        </button>
-        <button className="p-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 transition">
-          <MoreHorizontal className="w-4 h-4 text-gray-400" />
-        </button>
-      </div>
-    </motion.div>
-  );
-};
-
-// ============ MAIN BILLS PAGE ============
 const Bills = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [bills, setBills] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -240,15 +52,6 @@ const Bills = () => {
   const [selectedBill, setSelectedBill] = useState(null);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [processing, setProcessing] = useState(false);
-
-  const stats = {
-    totalOutstanding: 12450,
-    paidThisMonth: 8450,
-    upcoming: 3200,
-    monthlySpending: 8450,
-    autoPayActive: 3,
-    savings: 450,
-  };
 
   const sampleBills = [
     { id: 1, provider: 'Ethio Electric (EEP)', account: '88203-11', amount: 1420.50, dueDate: '2024-10-12', status: 'Due Today' },
@@ -267,6 +70,15 @@ const Bills = () => {
     { month: 'Jun', amount: 3400 },
   ];
 
+  const stats = {
+    totalOutstanding: 12450,
+    paidThisMonth: 8450,
+    upcoming: 3200,
+    monthlySpending: 8450,
+    autoPayActive: 3,
+    savings: 450,
+  };
+
   useEffect(() => {
     fetchBills();
   }, []);
@@ -276,6 +88,7 @@ const Bills = () => {
       const response = await billService.getAll();
       setBills(response.data.bills || sampleBills);
     } catch (error) {
+      console.error('Error fetching bills:', error);
       setBills(sampleBills);
     } finally {
       setLoading(false);
@@ -287,115 +100,178 @@ const Bills = () => {
     setShowPayModal(true);
   };
 
-  const handleConfirmPayment = () => {
+  const handleConfirmPayment = async () => {
+    if (!selectedBill) return;
+
     setProcessing(true);
-    setTimeout(() => {
-      setProcessing(false);
+    try {
+      // Actual API call
+      const response = await billService.pay(selectedBill.id);
       setPaymentSuccess(true);
       toast.success('✅ Bill paid successfully!');
+      
+      // Refresh bills
+      await fetchBills();
+      
       setTimeout(() => {
         setShowPayModal(false);
         setPaymentSuccess(false);
-        fetchBills();
       }, 2000);
-    }, 1500);
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Failed to pay bill');
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const filteredBills = bills.filter(bill =>
     bill.provider.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const getProviderIcon = (provider) => {
+    if (provider.includes('Electric')) return <Zap className="w-5 h-5" />;
+    if (provider.includes('Telecom') || provider.includes('Safaricom')) return <Wifi className="w-5 h-5" />;
+    if (provider.includes('Water')) return <Droplets className="w-5 h-5" />;
+    return <FileText className="w-5 h-5" />;
+  };
+
+  const getStatusColor = (status) => {
+    const colors = {
+      'Due Today': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+      'Due Tomorrow': 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+      'Due This Week': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+      'Paid': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+      'Overdue': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+    };
+    return colors[status] || 'bg-gray-100 text-gray-700 dark:bg-gray-700/30 dark:text-gray-400';
+  };
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
+    <div className={`min-h-screen bg-[#F8FAFC] dark:bg-gray-900 transition-colors duration-300`}>
       <div className="flex">
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-20'}`}>
-          {/* Top Nav */}
-          <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
-            <div className="flex items-center justify-between px-4 md:px-6 h-16">
-              <div className="flex items-center gap-3 flex-1">
-                <button
-                  onClick={() => setSidebarOpen(!sidebarOpen)}
-                  className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition"
-                >
-                  <Menu className="w-5 h-5 text-gray-600" />
-                </button>
-                <h1 className="text-lg font-bold text-gray-800">Bill Payments</h1>
-              </div>
+          <TopNav 
+            sidebarOpen={sidebarOpen} 
+            setSidebarOpen={setSidebarOpen}
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
+          />
 
-              <div className="flex items-center gap-2">
-                <div className="hidden md:flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2">
-                  <span className="text-sm text-gray-500">Balance:</span>
-                  <span className="text-sm font-bold text-[#0B7A43]">ETB 124,580</span>
-                </div>
-                <button className="hidden sm:flex items-center gap-2 px-4 py-2 bg-[#0B7A43] text-white rounded-xl text-sm font-medium hover:bg-[#096336] transition shadow-lg shadow-[#0B7A43]/25">
-                  <Plus className="w-4 h-4" />
-                  Add Funds
-                </button>
-                <button className="p-2 rounded-lg hover:bg-gray-100 transition relative">
-                  <Bell className="w-5 h-5 text-gray-600" />
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
-                </button>
-                <div className="w-8 h-8 rounded-full bg-[#0B7A43] flex items-center justify-center text-white font-semibold text-sm">
-                  {user?.fullName?.charAt(0) || 'U'}
-                </div>
-              </div>
-            </div>
-          </header>
-
-          {/* Main Content */}
           <main className="p-4 md:p-6 lg:p-8">
             {/* Page Header */}
             <div className="mb-6">
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Bill Payments Center</h1>
-              <p className="text-gray-500">Manage, track, and pay all your bills in one place.</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">Bill Payments Center</h1>
+              <p className="text-gray-500 dark:text-gray-400">Manage, track, and pay all your bills in one place.</p>
             </div>
 
             {/* Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-              <StatCard icon={AlertCircle} label="Outstanding" value={`ETB ${stats.totalOutstanding.toLocaleString()}`} subtitle="Total due" color="red" />
-              <StatCard icon={CheckCircle} label="Paid This Month" value={`ETB ${stats.paidThisMonth.toLocaleString()}`} change="+8%" positive color="green" />
-              <StatCard icon={Calendar} label="Upcoming" value={`ETB ${stats.upcoming.toLocaleString()}`} subtitle="This week" color="blue" />
-              <StatCard icon={TrendingUp} label="Monthly Spending" value={`ETB ${stats.monthlySpending.toLocaleString()}`} change="+5%" positive color="purple" />
-              <StatCard icon={Shield} label="AutoPay Active" value={stats.autoPayActive} subtitle="3 bills" color="green" />
-              <StatCard icon={Gift} label="Savings" value={`ETB ${stats.savings.toLocaleString()}`} change="-2%" positive color="yellow" />
+              <StatCard 
+                icon={AlertCircle} 
+                label="Outstanding" 
+                value={`ETB ${stats.totalOutstanding.toLocaleString()}`} 
+                subtitle="Total due" 
+                color="red" 
+                darkMode={darkMode}
+              />
+              <StatCard 
+                icon={CheckCircle} 
+                label="Paid This Month" 
+                value={`ETB ${stats.paidThisMonth.toLocaleString()}`} 
+                change="+8%" 
+                positive={true} 
+                color="green" 
+                darkMode={darkMode}
+              />
+              <StatCard 
+                icon={Calendar} 
+                label="Upcoming" 
+                value={`ETB ${stats.upcoming.toLocaleString()}`} 
+                subtitle="This week" 
+                color="blue" 
+                darkMode={darkMode}
+              />
+              <StatCard 
+                icon={TrendingUp} 
+                label="Monthly Spending" 
+                value={`ETB ${stats.monthlySpending.toLocaleString()}`} 
+                change="+5%" 
+                positive={true} 
+                color="purple" 
+                darkMode={darkMode}
+              />
+              <StatCard 
+                icon={Shield} 
+                label="AutoPay Active" 
+                value={stats.autoPayActive} 
+                subtitle="3 bills" 
+                color="green" 
+                darkMode={darkMode}
+              />
+              <StatCard 
+                icon={Gift} 
+                label="Savings" 
+                value={`ETB ${stats.savings.toLocaleString()}`} 
+                change="-2%" 
+                positive={false} 
+                color="yellow" 
+                darkMode={darkMode}
+              />
             </div>
 
             {/* Search */}
             <div className="flex flex-wrap items-center gap-3 mb-6">
               <div className="flex-1 min-w-[200px] relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
                 <input
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search bills..."
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:border-[#0B7A43] focus:ring-2 focus:ring-[#0B7A43]/20 outline-none transition-all text-sm"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-[#0B7A43] focus:ring-2 focus:ring-[#0B7A43]/20 outline-none transition-all text-sm dark:text-white dark:placeholder-gray-400"
                 />
               </div>
-              <button className="p-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 transition">
-                <Filter className="w-4 h-4 text-gray-400" />
+              <button className="p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                <Filter className="w-4 h-4 text-gray-400 dark:text-gray-500" />
               </button>
-              <button className="p-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 transition">
-                <RefreshCw className="w-4 h-4 text-gray-400" />
+              <button 
+                onClick={fetchBills}
+                className="p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+              >
+                <RefreshCw className="w-4 h-4 text-gray-400 dark:text-gray-500" />
               </button>
             </div>
 
             {/* Bill Cards Grid */}
             {loading ? (
-              <div className="text-center py-12">Loading bills...</div>
+              <div className="text-center py-12 text-gray-500 dark:text-gray-400">Loading bills...</div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                {filteredBills.map((bill) => (
-                  <BillCard key={bill.id} bill={bill} onPay={handlePayBill} />
-                ))}
+                {filteredBills.length > 0 ? (
+                  filteredBills.map((bill) => (
+                    <BillCard 
+                      key={bill.id} 
+                      bill={bill} 
+                      onPay={handlePayBill}
+                      darkMode={darkMode}
+                      getProviderIcon={getProviderIcon}
+                      getStatusColor={getStatusColor}
+                    />
+                  ))
+                ) : (
+                  <div className="col-span-full text-center py-12 text-gray-500 dark:text-gray-400">
+                    <FileText className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
+                    <p>No bills found</p>
+                  </div>
+                )}
               </div>
             )}
 
             {/* Chart Section */}
-            <div className="bg-white rounded-2xl p-5 border border-gray-100">
-              <h3 className="font-semibold text-gray-800 mb-4">Monthly Bill Spending</h3>
+            <div className={`bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700`}>
+              <h3 className="font-semibold text-gray-800 dark:text-white mb-4">Monthly Bill Spending</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={chartData}>
@@ -405,9 +281,9 @@ const Bills = () => {
                         <stop offset="95%" stopColor="#0B7A43" stopOpacity={0} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
-                    <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#9CA3AF', fontSize: 12 }} />
-                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9CA3AF', fontSize: 12 }} />
+                    <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#374151' : '#E5E7EB'} vertical={false} />
+                    <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: darkMode ? '#9CA3AF' : '#6B7280', fontSize: 12 }} />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fill: darkMode ? '#9CA3AF' : '#6B7280', fontSize: 12 }} />
                     <Tooltip />
                     <Area type="monotone" dataKey="amount" stroke="#0B7A43" strokeWidth={2} fill="url(#billGrad)" />
                   </AreaChart>
@@ -417,30 +293,30 @@ const Bills = () => {
 
             {/* AI Insights */}
             <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 rounded-xl bg-green-50 border border-green-100">
+              <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800">
                 <div className="flex items-start gap-3">
-                  <Sparkles className="w-5 h-5 text-[#0B7A43] mt-0.5" />
+                  <Sparkles className="w-5 h-5 text-[#0B7A43] dark:text-green-400 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">Electricity Bill</p>
-                    <p className="text-xs text-gray-600">Increased by 12% compared to last month.</p>
+                    <p className="text-sm font-medium text-gray-800 dark:text-white">Electricity Bill</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">Increased by 12% compared to last month.</p>
                   </div>
                 </div>
               </div>
-              <div className="p-4 rounded-xl bg-blue-50 border border-blue-100">
+              <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800">
                 <div className="flex items-start gap-3">
-                  <Gift className="w-5 h-5 text-blue-600 mt-0.5" />
+                  <Gift className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">Savings Opportunity</p>
-                    <p className="text-xs text-gray-600">Save 450 ETB annually by enabling AutoPay.</p>
+                    <p className="text-sm font-medium text-gray-800 dark:text-white">Savings Opportunity</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">Save 450 ETB annually by enabling AutoPay.</p>
                   </div>
                 </div>
               </div>
-              <div className="p-4 rounded-xl bg-yellow-50 border border-yellow-100">
+              <div className="p-4 rounded-xl bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-100 dark:border-yellow-800">
                 <div className="flex items-start gap-3">
-                  <TrendingUp className="w-5 h-5 text-yellow-600 mt-0.5" />
+                  <TrendingUp className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">Stable Spending</p>
-                    <p className="text-xs text-gray-600">Internet bills stable for the last 6 months.</p>
+                    <p className="text-sm font-medium text-gray-800 dark:text-white">Stable Spending</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">Internet bills stable for the last 6 months.</p>
                   </div>
                 </div>
               </div>
@@ -452,22 +328,25 @@ const Bills = () => {
       {/* Payment Modal */}
       <AnimatePresence>
         {showPayModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 dark:bg-black/70">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl"
+              className={`bg-white dark:bg-gray-800 rounded-3xl max-w-md w-full p-6 shadow-2xl`}
             >
               {paymentSuccess ? (
                 <div className="text-center py-8">
-                  <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-                    <CheckCircle className="w-10 h-10 text-green-600" />
+                  <div className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle className="w-10 h-10 text-green-600 dark:text-green-400" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-800">Payment Successful!</h3>
-                  <p className="text-gray-500 mt-2">Your bill has been paid.</p>
+                  <h3 className="text-2xl font-bold text-gray-800 dark:text-white">Payment Successful!</h3>
+                  <p className="text-gray-500 dark:text-gray-400 mt-2">Your bill has been paid.</p>
                   <button
-                    onClick={() => setShowPayModal(false)}
+                    onClick={() => {
+                      setShowPayModal(false);
+                      setPaymentSuccess(false);
+                    }}
                     className="mt-6 px-6 py-3 bg-[#0B7A43] text-white rounded-xl font-medium hover:bg-[#096336] transition"
                   >
                     Done
@@ -476,24 +355,24 @@ const Bills = () => {
               ) : (
                 <>
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-bold text-gray-800">Confirm Payment</h3>
-                    <button onClick={() => setShowPayModal(false)} className="p-2 rounded-lg hover:bg-gray-100 transition">
-                      <X className="w-5 h-5 text-gray-500" />
+                    <h3 className="text-xl font-bold text-gray-800 dark:text-white">Confirm Payment</h3>
+                    <button onClick={() => setShowPayModal(false)} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                      <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                     </button>
                   </div>
                   {selectedBill && (
                     <div className="space-y-4">
-                      <div className="bg-gray-50 rounded-xl p-4">
-                        <p className="text-sm text-gray-500">Provider</p>
-                        <p className="font-semibold text-gray-800">{selectedBill.provider}</p>
+                      <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Provider</p>
+                        <p className="font-semibold text-gray-800 dark:text-white">{selectedBill.provider}</p>
                       </div>
-                      <div className="bg-gray-50 rounded-xl p-4">
-                        <p className="text-sm text-gray-500">Amount</p>
-                        <p className="text-2xl font-bold text-[#0B7A43]">{selectedBill.amount} ETB</p>
+                      <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Amount</p>
+                        <p className="text-2xl font-bold text-[#0B7A43] dark:text-[#14B86A]">{selectedBill.amount} ETB</p>
                       </div>
-                      <div className="bg-gray-50 rounded-xl p-4">
-                        <p className="text-sm text-gray-500">Account</p>
-                        <p className="font-medium text-gray-800">{selectedBill.account}</p>
+                      <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Account</p>
+                        <p className="font-medium text-gray-800 dark:text-white">{selectedBill.account}</p>
                       </div>
                       <button
                         onClick={handleConfirmPayment}
@@ -518,6 +397,56 @@ const Bills = () => {
         )}
       </AnimatePresence>
     </div>
+  );
+};
+
+// ============ BILL CARD COMPONENT ============
+const BillCard = ({ bill, onPay, darkMode, getProviderIcon, getStatusColor }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -4 }}
+      className={`bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300`}
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-[#0B7A43]/10 dark:bg-[#0B7A43]/20 flex items-center justify-center text-[#0B7A43] dark:text-[#14B86A]">
+            {getProviderIcon(bill.provider)}
+          </div>
+          <div>
+            <h4 className="font-semibold text-gray-800 dark:text-white">{bill.provider}</h4>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Account: {bill.account}</p>
+          </div>
+        </div>
+        <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${getStatusColor(bill.status)}`}>
+          {bill.status}
+        </span>
+      </div>
+
+      <div className="mt-4 flex items-center justify-between">
+        <div>
+          <p className="text-xs text-gray-500 dark:text-gray-400">Due Date</p>
+          <p className="text-sm font-medium text-gray-800 dark:text-white">{bill.dueDate}</p>
+        </div>
+        <div className="text-right">
+          <p className="text-xs text-gray-500 dark:text-gray-400">Amount</p>
+          <p className="text-lg font-bold text-gray-800 dark:text-white">{bill.amount} ETB</p>
+        </div>
+      </div>
+
+      <div className="mt-4 flex items-center gap-2">
+        <button
+          onClick={() => onPay(bill)}
+          className="flex-1 bg-[#0B7A43] text-white py-2.5 rounded-xl text-sm font-medium hover:bg-[#096336] transition"
+        >
+          Pay Now
+        </button>
+        <button className="p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+          <MoreHorizontal className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+        </button>
+      </div>
+    </motion.div>
   );
 };
 
