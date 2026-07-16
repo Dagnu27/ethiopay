@@ -62,7 +62,7 @@ const register = async (req, res) => {
       }
     });
 
-    console.log('✅ User created:', user.email);
+    console.log(' User created:', user.email);
 
     // Generate token
     console.log('🔑 Generating JWT token...');
@@ -72,7 +72,7 @@ const register = async (req, res) => {
       { expiresIn: '7d' }
     );
 
-    console.log('✅ Registration successful!');
+    console.log(' Registration successful!');
     res.status(201).json({
       success: true,
       message: 'User registered successfully',
@@ -141,7 +141,7 @@ const login = async (req, res) => {
 
     const { passwordHash, ...userWithoutPassword } = user;
 
-    console.log('✅ Login successful:', email);
+    console.log(' Login successful:', email);
     res.json({
       success: true,
       message: 'Login successful',
