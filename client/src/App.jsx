@@ -22,7 +22,7 @@ import Notifications from './pages/Notifications';
 // ✅ Admin Pages
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminAnalytics from './pages/admin/Analytics';
-import AdminUsers from './pages/admin/Users';
+// import AdminUsers from './pages/admin/Users';
 // import AdminMerchants from './pages/admin/Merchants';
 // import AdminTransactions from './pages/admin/Transactions';
 // import AdminPayments from './pages/admin/Payments';
@@ -52,7 +52,7 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-// ✅ Admin Route Protection - FIXED
+// ✅ Admin Route Protection
 const AdminRoute = ({ children }) => {
   const { user, loading } = useAuth();
   
@@ -68,11 +68,8 @@ const AdminRoute = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
   
-  // ✅ FIX: Check if user is admin by email (temporary fix)
-  // This allows admin@ethiopay.com to access admin pages even if isAdmin is false
-  const isAdmin = user.isAdmin || user.email === 'admin@ethiopay.com';
-  
-  if (!isAdmin) {
+  // Check if user is admin
+  if (!user.isAdmin) {
     return <Navigate to="/dashboard" replace />;
   }
   
@@ -129,9 +126,11 @@ function App() {
           {/* ========== ADMIN ROUTES (Admin Only) ========== */}
           <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
           <Route path="/admin/analytics" element={<AdminRoute><AdminAnalytics /></AdminRoute>} />
+          
+          {/* Uncomment when pages are created */}
           <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
-          {/* <Route path="/admin/merchants" element={<AdminRoute><AdminMerchants /></AdminRoute>} /> */}
-          {/* <Route path="/admin/transactions" element={<AdminRoute><AdminTransactions /></AdminRoute>} /> */}
+          <Route path="/admin/merchants" element={<AdminRoute><AdminMerchants /></AdminRoute>} />
+          <Route path="/admin/transactions" element={<AdminRoute><AdminTransactions /></AdminRoute>} />
           {/* <Route path="/admin/payments" element={<AdminRoute><AdminPayments /></AdminRoute>} /> */}
           {/* <Route path="/admin/revenue" element={<AdminRoute><AdminRevenue /></AdminRoute>} /> */}
           {/* <Route path="/admin/settlement" element={<AdminRoute><AdminSettlement /></AdminRoute>} /> */}
