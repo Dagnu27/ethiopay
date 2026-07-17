@@ -1,4 +1,3 @@
-// server/controllers/authController.js
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const bcrypt = require('bcryptjs');
@@ -58,21 +57,28 @@ const register = async (req, res) => {
         phone: true,
         balance: true,
         isAdmin: true,
-        profileImage: true
+        isActive: true,
+        profileImage: true,
+        createdAt: true,
+        updatedAt: true
       }
     });
 
-    console.log(' User created:', user.email);
+    console.log('✅ User created:', user.email);
 
-    // Generate token
+    // Generate token with isAdmin included
     console.log('🔑 Generating JWT token...');
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      { 
+        id: user.id, 
+        email: user.email,
+        isAdmin: user.isAdmin  // ✅ ADD THIS
+      },
       process.env.JWT_SECRET || 'fallback_secret_key_123',
       { expiresIn: '7d' }
     );
 
-    console.log(' Registration successful!');
+    console.log('✅ Registration successful!');
     res.status(201).json({
       success: true,
       message: 'User registered successfully',
@@ -133,20 +139,35 @@ const login = async (req, res) => {
       });
     }
 
+    // ✅ FIX: Generate token with isAdmin included
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      { 
+        id: user.id, 
+        email: user.email,
+        isAdmin: user.isAdmin  // ✅ ADD THIS
+      },
       process.env.JWT_SECRET || 'fallback_secret_key_123',
       { expiresIn: '7d' }
     );
 
+    // ✅ FIX: Remove password hash but keep ALL other fields including isAdmin
     const { passwordHash, ...userWithoutPassword } = user;
+    
+    // ✅ DEBUG: Log the user data to verify isAdmin
+    console.log('✅ Login successful for:', email);
+    console.log('📊 User data:', { 
+      id: user.id, 
+      email: user.email, 
+      isAdmin: user.isAdmin,
+      isActive: user.isActive,
+      balance: user.balance
+    });
 
-    console.log(' Login successful:', email);
     res.json({
       success: true,
       message: 'Login successful',
       token,
-      user: userWithoutPassword
+      user: userWithoutPassword  // This includes isAdmin ✅
     });
   } catch (error) {
     console.error('❌ Login error:', error);
@@ -183,6 +204,9 @@ const getProfile = async (req, res) => {
         error: 'User not found'
       });
     }
+
+    console.log('✅ Profile fetched for:', user.email);
+    console.log('📊 isAdmin:', user.isAdmin);
 
     res.json({
       success: true,

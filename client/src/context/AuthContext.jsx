@@ -21,7 +21,13 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await authService.profile();
       setUser(response.data.user);
+      
+      // ✅ DEBUG: Log user data to verify isAdmin
+      console.log('📊 Profile fetched:', response.data.user);
+      console.log('🔑 isAdmin:', response.data.user?.isAdmin);
+      
     } catch (error) {
+      console.error('❌ Profile fetch error:', error);
       localStorage.removeItem('token');
       setToken(null);
     } finally {
@@ -33,6 +39,12 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await authService.login({ email, password });
       const { token, user } = response.data;
+      
+      // ✅ DEBUG: Log login response
+      console.log('🔐 Login response:', response.data);
+      console.log('👤 User data:', user);
+      console.log('🔑 isAdmin:', user?.isAdmin);
+      
       localStorage.setItem('token', token);
       setToken(token);
       setUser(user);
