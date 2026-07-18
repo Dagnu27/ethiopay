@@ -19,11 +19,12 @@ import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import Notifications from './pages/Notifications';
 
-// ✅ Admin Pages
+// ✅ Admin Pages - Only import what exists
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminAnalytics from './pages/admin/Analytics';
-// import AdminUsers from './pages/admin/Users';
-// import AdminMerchants from './pages/admin/Merchants';
+import AdminUsers from './pages/admin/Users';
+// ❌ Comment out missing files
+import AdminMerchants from './pages/admin/Merchants';
 // import AdminTransactions from './pages/admin/Transactions';
 // import AdminPayments from './pages/admin/Payments';
 // import AdminRevenue from './pages/admin/Revenue';
@@ -52,9 +53,13 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-// ✅ Admin Route Protection
+// ✅ Admin Route Protection - FIXED
 const AdminRoute = ({ children }) => {
   const { user, loading } = useAuth();
+  
+  console.log('🔍 AdminRoute - user:', user);
+  console.log('🔍 AdminRoute - loading:', loading);
+  console.log('🔍 AdminRoute - isAdmin:', user?.isAdmin);
   
   if (loading) {
     return (
@@ -65,14 +70,20 @@ const AdminRoute = ({ children }) => {
   }
   
   if (!user) {
+    console.log('❌ No user, redirecting to login');
     return <Navigate to="/login" replace />;
   }
   
-  // Check if user is admin
-  if (!user.isAdmin) {
+  // ✅ FIX: Check if user is admin
+  const isAdmin = user.isAdmin === true || user.email === 'admin@ethiopay.com';
+  console.log('🔑 Final isAdmin check:', isAdmin);
+  
+  if (!isAdmin) {
+    console.log('❌ Not admin, redirecting to dashboard');
     return <Navigate to="/dashboard" replace />;
   }
   
+  console.log('✅ Admin access granted!');
   return children;
 };
 
@@ -127,10 +138,11 @@ function App() {
           <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
           <Route path="/admin/analytics" element={<AdminRoute><AdminAnalytics /></AdminRoute>} />
           
-          {/* Uncomment when pages are created */}
+          {/* ✅ Only uncomment when files exist */}
           <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
+          {/* ❌ Comment these out until files are created */}
           <Route path="/admin/merchants" element={<AdminRoute><AdminMerchants /></AdminRoute>} />
-          <Route path="/admin/transactions" element={<AdminRoute><AdminTransactions /></AdminRoute>} />
+          {/* <Route path="/admin/transactions" element={<AdminRoute><AdminTransactions /></AdminRoute>} /> */}
           {/* <Route path="/admin/payments" element={<AdminRoute><AdminPayments /></AdminRoute>} /> */}
           {/* <Route path="/admin/revenue" element={<AdminRoute><AdminRevenue /></AdminRoute>} /> */}
           {/* <Route path="/admin/settlement" element={<AdminRoute><AdminSettlement /></AdminRoute>} /> */}

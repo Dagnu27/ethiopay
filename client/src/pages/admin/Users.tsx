@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Users as UsersIcon,  // ← RENAMED to avoid conflict
+  Users as UsersIcon,
   Search,
   Filter,
   Download,
@@ -124,6 +124,7 @@ const Users = () => {
   };
 
   const formatDate = (date: string) => {
+    if (!date) return 'N/A';
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -131,8 +132,12 @@ const Users = () => {
     });
   };
 
+  // ✅ FIXED: Handle undefined/null values
   const formatCurrency = (amount: number) => {
-    return `ETB ${amount.toLocaleString()}`;
+    if (amount === undefined || amount === null || isNaN(amount)) {
+      return 'ETB 0.00';
+    }
+    return `ETB ${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
   const getStatusBadge = (isActive: boolean) => {
@@ -268,21 +273,21 @@ const Users = () => {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-full bg-[#0D7C4A]/10 flex items-center justify-center text-[#0D7C4A] font-semibold text-sm">
-                          {user.fullName.charAt(0)}
+                          {user.fullName?.charAt(0) || 'U'}
                         </div>
                         <div>
                           <p className="text-sm font-medium text-gray-800 dark:text-white">
-                            {user.fullName}
+                            {user.fullName || 'Unknown User'}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400">
-                            ID: {user.id.slice(0, 8)}
+                            ID: {user.id?.slice(0, 8) || 'N/A'}
                           </p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-sm text-gray-600 dark:text-gray-300">{user.email}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{user.phone}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">{user.email || 'N/A'}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{user.phone || 'N/A'}</p>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <p className="text-sm font-semibold text-gray-800 dark:text-white">
@@ -419,11 +424,11 @@ const Users = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-[#0D7C4A] flex items-center justify-center text-white text-2xl font-bold">
-                  {selectedUser.fullName.charAt(0)}
+                  {selectedUser.fullName?.charAt(0) || 'U'}
                 </div>
                 <div>
                   <p className="text-lg font-semibold text-gray-800 dark:text-white">
-                    {selectedUser.fullName}
+                    {selectedUser.fullName || 'Unknown User'}
                   </p>
                   <div className="flex items-center gap-2 mt-1">
                     {getRoleBadge(selectedUser.isAdmin)}
@@ -435,11 +440,11 @@ const Users = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                   <Mail className="w-4 h-4 text-gray-400" />
-                  <span className="text-sm text-gray-600 dark:text-gray-300">{selectedUser.email}</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-300">{selectedUser.email || 'N/A'}</span>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                   <Phone className="w-4 h-4 text-gray-400" />
-                  <span className="text-sm text-gray-600 dark:text-gray-300">{selectedUser.phone}</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-300">{selectedUser.phone || 'N/A'}</span>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                   <Calendar className="w-4 h-4 text-gray-400" />
