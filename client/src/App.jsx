@@ -25,9 +25,9 @@ import AdminAnalytics from './pages/admin/Analytics';
 import AdminUsers from './pages/admin/Users';
 // ❌ Comment out missing files
 import AdminMerchants from './pages/admin/Merchants';
-// import AdminTransactions from './pages/admin/Transactions';
-// import AdminPayments from './pages/admin/Payments';
-// import AdminRevenue from './pages/admin/Revenue';
+import AdminTransactions from './pages/admin/Transactions';
+import AdminPayments from './pages/admin/Payments';
+import AdminRevenue from './pages/admin/Revenue';
 // import AdminSettlement from './pages/admin/Settlement';
 // import AdminVerification from './pages/admin/Verification';
 // import AdminSecurity from './pages/admin/Security';
@@ -142,9 +142,9 @@ function App() {
           <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
           {/* ❌ Comment these out until files are created */}
           <Route path="/admin/merchants" element={<AdminRoute><AdminMerchants /></AdminRoute>} />
-          {/* <Route path="/admin/transactions" element={<AdminRoute><AdminTransactions /></AdminRoute>} /> */}
-          {/* <Route path="/admin/payments" element={<AdminRoute><AdminPayments /></AdminRoute>} /> */}
-          {/* <Route path="/admin/revenue" element={<AdminRoute><AdminRevenue /></AdminRoute>} /> */}
+          <Route path="/admin/transactions" element={<AdminRoute><AdminTransactions /></AdminRoute>} />
+          <Route path="/admin/payments" element={<AdminRoute><AdminPayments /></AdminRoute>} />
+          <Route path="/admin/revenue" element={<AdminRoute><AdminRevenue /></AdminRoute>} />
           {/* <Route path="/admin/settlement" element={<AdminRoute><AdminSettlement /></AdminRoute>} /> */}
           {/* <Route path="/admin/verification" element={<AdminRoute><AdminVerification /></AdminRoute>} /> */}
           {/* <Route path="/admin/security" element={<AdminRoute><AdminSecurity /></AdminRoute>} /> */}
