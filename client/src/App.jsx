@@ -31,9 +31,9 @@ import AdminRevenue from './pages/admin/Revenue';
 import AdminSettlement from './pages/admin/Settlement';
 import AdminVerification from './pages/admin/Verification';
 import AdminSecurity from './pages/admin/Security';
-// import AdminReports from './pages/admin/Reports';
-// import AdminNotifications from './pages/admin/Notifications';
-// import AdminSettings from './pages/admin/Settings';
+import AdminReports from './pages/admin/Reports';
+import AdminNotifications from './pages/admin/Notifications';
+import AdminSettings from './pages/admin/Settings';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -148,9 +148,9 @@ function App() {
           <Route path="/admin/settlement" element={<AdminRoute><AdminSettlement /></AdminRoute>} />
           <Route path="/admin/verification" element={<AdminRoute><AdminVerification /></AdminRoute>} />
           <Route path="/admin/security" element={<AdminRoute><AdminSecurity /></AdminRoute>} />
-          {/* <Route path="/admin/reports" element={<AdminRoute><AdminReports /></AdminRoute>} /> */}
-          {/* <Route path="/admin/notifications" element={<AdminRoute><AdminNotifications /></AdminRoute>} /> */}
-          {/* <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} /> */}
+          <Route path="/admin/reports" element={<AdminRoute><AdminReports /></AdminRoute>} />
+          <Route path="/admin/notifications" element={<AdminRoute><AdminNotifications /></AdminRoute>} />
+          <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} />
 
           {/* ========== 404 ========== */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
