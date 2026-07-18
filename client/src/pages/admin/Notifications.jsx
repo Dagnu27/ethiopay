@@ -169,13 +169,10 @@ const Notifications = () => {
   return (
     <AdminLayout>
       <div className="space-y-6">
-        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Notifications</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Manage system notifications and alerts
-            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Manage system notifications and alerts</p>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -266,12 +263,9 @@ const Notifications = () => {
                 }`}
               >
                 <div className="flex items-start gap-4">
-                  {/* Icon */}
                   <div className={`p-2 rounded-xl ${getTypeColor(notification.type)} border`}>
                     {getTypeIcon(notification.type)}
                   </div>
-
-                  {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">
                       <div>
@@ -297,8 +291,6 @@ const Notifications = () => {
                       </div>
                     </div>
                   </div>
-
-                  {/* Actions */}
                   <div className="flex items-center gap-1">
                     {notification.status === 'unread' && (
                       <button

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Settings,
+  Settings as SettingsIcon,
   Shield,
   Bell,
   Mail,
@@ -31,26 +31,19 @@ const Settings = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [settings, setSettings] = useState({
-    // General
     siteName: 'EthioPay',
     siteDescription: 'Ethiopia Digital Payment Platform',
     siteUrl: 'https://ethiopay.com',
     timezone: 'Africa/Addis_Ababa',
     currency: 'ETB',
-
-    // Security
     twoFactorAuth: true,
     sessionTimeout: '30',
     maxLoginAttempts: '5',
     passwordPolicy: 'strong',
-
-    // Notifications
     emailNotifications: true,
     pushNotifications: true,
     smsNotifications: false,
     adminAlerts: true,
-
-    // System
     maintenanceMode: false,
     allowRegistration: true,
     allowWithdrawals: true,
@@ -66,16 +59,16 @@ const Settings = () => {
   };
 
   const handleToggle = (key) => {
-    setSettings(prev => ({
+    setSettings((prev) => ({
       ...prev,
-      [key]: !prev[key]
+      [key]: !prev[key],
     }));
   };
 
   const handleChange = (key, value) => {
-    setSettings(prev => ({
+    setSettings((prev) => ({
       ...prev,
-      [key]: value
+      [key]: value,
     }));
   };
 
@@ -83,7 +76,7 @@ const Settings = () => {
     {
       id: 'general',
       title: 'General Settings',
-      icon: <Settings className="w-5 h-5" />,
+      icon: <SettingsIcon className="w-5 h-5" />,
       description: 'Basic platform settings and information',
     },
     {
@@ -401,13 +394,10 @@ const Settings = () => {
   return (
     <AdminLayout>
       <div className="space-y-6">
-        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Settings</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Manage platform configuration and preferences
-            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Manage platform configuration and preferences</p>
           </div>
           <button
             onClick={handleSave}
@@ -423,9 +413,7 @@ const Settings = () => {
           </button>
         </div>
 
-        {/* Settings Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
               {sections.map((section) => (
@@ -440,29 +428,25 @@ const Settings = () => {
                 >
                   {section.icon}
                   <span>{section.title}</span>
-                  {activeSection === section.id && (
-                    <ChevronRight className="w-4 h-4 ml-auto" />
-                  )}
+                  {activeSection === section.id && <ChevronRight className="w-4 h-4 ml-auto" />}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Content */}
           <div className="lg:col-span-3">
             <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-1">
-                {sections.find(s => s.id === activeSection)?.title}
+                {sections.find((s) => s.id === activeSection)?.title}
               </h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-                {sections.find(s => s.id === activeSection)?.description}
+                {sections.find((s) => s.id === activeSection)?.description}
               </p>
               {renderSection()}
             </div>
           </div>
         </div>
 
-        {/* System Status */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-100 dark:border-gray-700">
             <div className="flex items-center gap-2">
