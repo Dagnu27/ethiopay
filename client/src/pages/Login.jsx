@@ -9,8 +9,7 @@ import {
   ArrowRight,
   Shield,
   Wallet
-} from 'lucide-react';                               
-
+} from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const Login = () => {
@@ -40,7 +39,16 @@ const Login = () => {
     setLoading(false);
 
     if (result.success) {
-      navigate('/dashboard');
+      // ✅ FIX: Check if user is admin
+      const isAdmin = result.user?.isAdmin || email === 'admin@ethiopay.com';
+      
+      if (isAdmin) {
+        navigate('/admin');  // ✅ Go to Admin Dashboard
+        toast.success('Welcome Admin! 👑');
+      } else {
+        navigate('/dashboard');  // ✅ Go to User Dashboard
+        toast.success('Welcome back! 👋');
+      }
     }
   };
 

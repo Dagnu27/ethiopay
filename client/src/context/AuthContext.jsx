@@ -49,7 +49,9 @@ export const AuthProvider = ({ children }) => {
       setToken(token);
       setUser(user);
       toast.success('Welcome back! 👋');
-      return { success: true };
+      
+      // ✅ FIX: Return user so Login page can check isAdmin
+      return { success: true, user };
     } catch (error) {
       const message = error.response?.data?.error || 'Login failed';
       toast.error(message);
@@ -65,7 +67,7 @@ export const AuthProvider = ({ children }) => {
       setToken(token);
       setUser(user);
       toast.success('Account created successfully! 🎉');
-      return { success: true };
+      return { success: true, user };
     } catch (error) {
       const message = error.response?.data?.error || 'Registration failed';
       toast.error(message);
