@@ -19,11 +19,10 @@ import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import Notifications from './pages/Notifications';
 
-// ✅ Admin Pages - Only import what exists
+// ✅ Admin Pages
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminAnalytics from './pages/admin/Analytics';
 import AdminUsers from './pages/admin/Users';
-// ❌ Comment out missing files
 import AdminMerchants from './pages/admin/Merchants';
 import AdminTransactions from './pages/admin/Transactions';
 import AdminPayments from './pages/admin/Payments';
@@ -53,7 +52,6 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-// ✅ Admin Route Protection - FIXED
 const AdminRoute = ({ children }) => {
   const { user, loading } = useAuth();
   
@@ -74,7 +72,6 @@ const AdminRoute = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
   
-  // ✅ FIX: Check if user is admin
   const isAdmin = user.isAdmin === true || user.email === 'admin@ethiopay.com';
   console.log('🔑 Final isAdmin check:', isAdmin);
   
@@ -137,10 +134,7 @@ function App() {
           {/* ========== ADMIN ROUTES (Admin Only) ========== */}
           <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
           <Route path="/admin/analytics" element={<AdminRoute><AdminAnalytics /></AdminRoute>} />
-          
-          {/* ✅ Only uncomment when files exist */}
           <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
-          {/* ❌ Comment these out until files are created */}
           <Route path="/admin/merchants" element={<AdminRoute><AdminMerchants /></AdminRoute>} />
           <Route path="/admin/transactions" element={<AdminRoute><AdminTransactions /></AdminRoute>} />
           <Route path="/admin/payments" element={<AdminRoute><AdminPayments /></AdminRoute>} />
@@ -153,7 +147,7 @@ function App() {
           <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} />
 
           {/* ========== 404 ========== */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />  {/* ✅ CHANGED TO "/" */}
         </Routes>
       </BrowserRouter>
     </AuthProvider>

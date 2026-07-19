@@ -51,11 +51,22 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
     return location.pathname === path;
   };
 
-  // ✅ Close sidebar on mobile when navigating
-  const handleLinkClick = () => {
+  // ✅ Handle navigation and close sidebar
+  const handleNavigation = (path) => {
     if (isMobile) {
       setSidebarOpen(false);
+      // Small delay to ensure sidebar closes before navigation
+      setTimeout(() => {
+        navigate(path);
+      }, 100);
+    } else {
+      navigate(path);
     }
+  };
+
+  // ✅ Close sidebar when clicking overlay
+  const handleOverlayClick = () => {
+    setSidebarOpen(false);
   };
 
   return (
@@ -71,7 +82,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
       >
         {/* Logo */}
         <div className={`flex items-center h-16 px-4 border-b border-gray-200 dark:border-gray-700 ${!sidebarOpen ? 'justify-center' : ''}`}>
-          <Link to="/dashboard" className="flex items-center gap-2" onClick={handleLinkClick}>
+          <Link to="/dashboard" className="flex items-center gap-2" onClick={() => handleNavigation('/dashboard')}>
             <div className="w-8 h-8 bg-[#0B7A43] rounded-xl flex items-center justify-center shadow-lg shadow-[#0B7A43]/25 flex-shrink-0">
               <span className="text-white font-bold text-sm">E</span>
             </div>
@@ -84,31 +95,31 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
           {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              onClick={handleLinkClick}
-              className={`
-                flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group
-                ${isActive(item.path)
-                  ? 'bg-[#0B7A43] text-white shadow-lg shadow-[#0B7A43]/20'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-[#0B7A43] dark:hover:text-white'
-                }
-                ${!sidebarOpen && 'justify-center'}
-              `}
-              title={!sidebarOpen ? item.label : ''}
-            >
-              <item.icon
-                className={`w-5 h-5 flex-shrink-0 ${
-                  isActive(item.path)
-                    ? 'text-white'
-                    : 'text-gray-400 dark:text-gray-500 group-hover:text-[#0B7A43] dark:group-hover:text-white'
-                }`}
-              />
-              {sidebarOpen && (
-                <span className="text-sm font-medium">{item.label}</span>
-              )}
-            </Link>
+            <div key={item.path}>
+              <button
+                onClick={() => handleNavigation(item.path)}
+                className={`
+                  flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group w-full text-left
+                  ${isActive(item.path)
+                    ? 'bg-[#0B7A43] text-white shadow-lg shadow-[#0B7A43]/20'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-[#0B7A43] dark:hover:text-white'
+                  }
+                  ${!sidebarOpen && 'justify-center'}
+                `}
+                title={!sidebarOpen ? item.label : ''}
+              >
+                <item.icon
+                  className={`w-5 h-5 flex-shrink-0 ${
+                    isActive(item.path)
+                      ? 'text-white'
+                      : 'text-gray-400 dark:text-gray-500 group-hover:text-[#0B7A43] dark:group-hover:text-white'
+                  }`}
+                />
+                {sidebarOpen && (
+                  <span className="text-sm font-medium">{item.label}</span>
+                )}
+              </button>
+            </div>
           ))}
 
           {/* Divider */}
@@ -118,35 +129,34 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
 
           {/* Bottom Navigation Items */}
           {sidebarOpen && bottomNavItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              onClick={handleLinkClick}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
-                isActive(item.path)
-                  ? 'bg-[#0B7A43] text-white shadow-lg shadow-[#0B7A43]/20'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-[#0B7A43] dark:hover:text-white'
-              }`}
-            >
-              <item.icon
-                className={`w-5 h-5 flex-shrink-0 ${
+            <div key={item.path}>
+              <button
+                onClick={() => handleNavigation(item.path)}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group w-full text-left ${
                   isActive(item.path)
-                    ? 'text-white'
-                    : 'text-gray-400 dark:text-gray-500 group-hover:text-[#0B7A43] dark:group-hover:text-white'
+                    ? 'bg-[#0B7A43] text-white shadow-lg shadow-[#0B7A43]/20'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-[#0B7A43] dark:hover:text-white'
                 }`}
-              />
-              <span className="text-sm font-medium">{item.label}</span>
-            </Link>
+              >
+                <item.icon
+                  className={`w-5 h-5 flex-shrink-0 ${
+                    isActive(item.path)
+                      ? 'text-white'
+                      : 'text-gray-400 dark:text-gray-500 group-hover:text-[#0B7A43] dark:group-hover:text-white'
+                  }`}
+                />
+                <span className="text-sm font-medium">{item.label}</span>
+              </button>
+            </div>
           ))}
         </nav>
 
         {/* User Profile */}
         <div className={`border-t border-gray-200 dark:border-gray-700 p-3 ${!sidebarOpen ? 'flex justify-center' : ''}`}>
           <div className={`flex items-center gap-3 w-full ${!sidebarOpen && 'justify-center'}`}>
-            <Link
-              to="/profile"
-              onClick={handleLinkClick}
-              className={`flex items-center gap-3 ${!sidebarOpen ? 'justify-center' : 'flex-1'} hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg p-1.5 transition`}
+            <button
+              onClick={() => handleNavigation('/profile')}
+              className={`flex items-center gap-3 ${!sidebarOpen ? 'justify-center' : 'flex-1'} hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg p-1.5 transition w-full text-left`}
             >
               <div className="w-9 h-9 rounded-full bg-gradient-to-r from-[#0B7A43] to-[#14B86A] flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
                 {user?.fullName?.charAt(0) || 'U'}
@@ -161,7 +171,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
                   </p>
                 </div>
               )}
-            </Link>
+            </button>
             {sidebarOpen && (
               <button
                 onClick={handleLogout}
@@ -197,7 +207,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 bg-black/50 z-40"
-              onClick={() => setSidebarOpen(false)}
+              onClick={handleOverlayClick}
             />
             
             {/* Sidebar */}
@@ -210,7 +220,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
             >
               {/* Close Button */}
               <button
-                onClick={() => setSidebarOpen(false)}
+                onClick={handleOverlayClick}
                 className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition z-10"
               >
                 <X className="w-5 h-5 text-gray-500" />
@@ -218,22 +228,24 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
 
               {/* Logo */}
               <div className="flex items-center h-16 px-4 border-b border-gray-200 dark:border-gray-700">
-                <Link to="/dashboard" className="flex items-center gap-2" onClick={handleLinkClick}>
+                <button
+                  onClick={() => handleNavigation('/dashboard')}
+                  className="flex items-center gap-2 w-full text-left"
+                >
                   <div className="w-8 h-8 bg-[#0B7A43] rounded-xl flex items-center justify-center shadow-lg shadow-[#0B7A43]/25">
                     <span className="text-white font-bold text-sm">E</span>
                   </div>
                   <span className="text-xl font-bold text-[#0B7A43] dark:text-white">EthioPay</span>
-                </Link>
+                </button>
               </div>
 
               {/* Navigation */}
               <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
                 {navItems.map((item) => (
-                  <Link
+                  <button
                     key={item.path}
-                    to={item.path}
-                    onClick={handleLinkClick}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
+                    onClick={() => handleNavigation(item.path)}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group w-full text-left ${
                       isActive(item.path)
                         ? 'bg-[#0B7A43] text-white shadow-lg shadow-[#0B7A43]/20'
                         : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-[#0B7A43] dark:hover:text-white'
@@ -247,7 +259,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
                       }`}
                     />
                     <span className="text-sm font-medium">{item.label}</span>
-                  </Link>
+                  </button>
                 ))}
 
                 {/* Divider */}
@@ -255,11 +267,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
 
                 {/* Bottom Navigation Items */}
                 {bottomNavItems.map((item) => (
-                  <Link
+                  <button
                     key={item.path}
-                    to={item.path}
-                    onClick={handleLinkClick}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
+                    onClick={() => handleNavigation(item.path)}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group w-full text-left ${
                       isActive(item.path)
                         ? 'bg-[#0B7A43] text-white shadow-lg shadow-[#0B7A43]/20'
                         : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-[#0B7A43] dark:hover:text-white'
@@ -273,17 +284,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
                       }`}
                     />
                     <span className="text-sm font-medium">{item.label}</span>
-                  </Link>
+                  </button>
                 ))}
               </nav>
 
               {/* User Profile */}
               <div className="border-t border-gray-200 dark:border-gray-700 p-3">
                 <div className="flex items-center gap-3">
-                  <Link
-                    to="/profile"
-                    className="flex items-center gap-3 flex-1 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg p-1.5 transition"
-                    onClick={handleLinkClick}
+                  <button
+                    onClick={() => handleNavigation('/profile')}
+                    className="flex items-center gap-3 flex-1 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg p-1.5 transition w-full text-left"
                   >
                     <div className="w-9 h-9 rounded-full bg-gradient-to-r from-[#0B7A43] to-[#14B86A] flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
                       {user?.fullName?.charAt(0) || 'U'}
@@ -296,7 +306,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
                         {user?.email || 'user@email.com'}
                       </p>
                     </div>
-                  </Link>
+                  </button>
                   <button
                     onClick={handleLogout}
                     className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition"
