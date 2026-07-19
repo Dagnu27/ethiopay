@@ -5,10 +5,12 @@ import { transactionService } from '../services/api';
 import { 
   TrendingUp, 
   TrendingDown,
+  Menu,
+  X,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-// Import shared components (UPDATED PATHS)
+// Import shared components
 import Sidebar from '../components/Sidebar';
 import TopNav from '../components/TopNav';
 import BalanceCard from '../components/dashboard/BalanceCard';
@@ -18,9 +20,9 @@ import Insights from '../components/dashboard/Insights';
 import Transactions from '../components/dashboard/Transactions';
 import BudgetTracker from '../components/dashboard/BudgetTracker';
 import PaymentCards from '../components/dashboard/PaymentCards';
-import StatCard from '../components/StatCard'; // We'll create this
+import StatCard from '../components/StatCard';
 
-// Import sample data from constants
+// Import sample data
 import { spendingData, categoryData } from '../data/dashboardData';
 
 const Dashboard = () => {
@@ -28,14 +30,49 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [balance, setBalance] = useState(124580);
   const [transactions, setTransactions] = useState([]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [stats, setStats] = useState({
     income: 142500,
     expenses: 84210.50,
     savings: 58289.50,
     totalTransactions: 124
   });
+
+  // Check if mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 1024) {
+        setSidebarOpen(true);
+      } else {
+        setSidebarOpen(false);
+      }
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Close sidebar on mobile when route changes
+  useEffect(() => {
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  }, [window.location?.pathname]);
+
+  // Prevent body scroll when sidebar is open on mobile
+  useEffect(() => {
+    if (isMobile && sidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobile, sidebarOpen]);
 
   useEffect(() => {
     fetchDashboardData();
@@ -50,7 +87,6 @@ const Dashboard = () => {
       setTransactions(historyRes.data.transactions || []);
     } catch (error) {
       console.error('Error fetching dashboard:', error);
-      // Fallback data
       setTransactions([
         {
           id: 1,
@@ -84,39 +120,71 @@ const Dashboard = () => {
 
   return (
     <div className={`min-h-screen bg-[#F8FAFC] dark:bg-gray-900 transition-colors duration-300`}>
-      <div className="flex">
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <div className="flex min-h-screen">
+        {/* Sidebar */}
+        <Sidebar 
+          sidebarOpen={sidebarOpen} 
+          setSidebarOpen={setSidebarOpen}
+          isMobile={isMobile}
+        />
 
+        {/* Mobile Overlay */}
+        {isMobile && sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-40"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
+        {/* Mobile Menu Button */}
+        <div className="lg:hidden fixed top-4 left-4 z-50">
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700"
+          >
+            {sidebarOpen ? (
+              <X className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            ) : (
+              <Menu className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            )}
+          </button>
+        </div>
+
+        {/* Main Content */}
         <div className={`flex-1 transition-all duration-300 ${
-          sidebarOpen ? 'lg:ml-64' : 'lg:ml-20'
-        }`}>
+          !isMobile && sidebarOpen ? 'lg:ml-64' : ''
+        } ${!isMobile && !sidebarOpen ? 'lg:ml-20' : ''}`}>
+          
           <TopNav 
             sidebarOpen={sidebarOpen} 
             setSidebarOpen={setSidebarOpen}
             darkMode={darkMode}
             setDarkMode={setDarkMode}
+            isMobile={isMobile}
           />
 
-          <main className="p-4 md:p-6 lg:p-8">
+          <main className="p-3 sm:p-4 md:p-6 lg:p-8 pt-20 lg:pt-6">
             {/* Welcome Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="mb-6"
+              className="mb-4 md:mb-6"
             >
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
+              <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white">
                 Welcome back, {user?.fullName?.split(' ')[0] || 'User'} 👋
               </h1>
-              <p className="text-gray-500 dark:text-gray-400">Here's what's happening with your money</p>
+              <p className="text-sm md:text-base text-gray-500 dark:text-gray-400">
+                Here's what's happening with your money
+              </p>
             </motion.div>
 
-            {/* Balance Cards Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
+            {/* Balance Cards - Responsive Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 md:gap-4 mb-4 md:mb-6">
               <div className="lg:col-span-2">
-                <BalanceCard balance={balance} stats={stats} darkMode={darkMode} />
+                <BalanceCard balance={balance} stats={stats} darkMode={darkMode} isMobile={isMobile} />
               </div>
-              <div className="lg:col-span-2 grid grid-cols-2 gap-4">
+              <div className="lg:col-span-2 grid grid-cols-2 gap-3 md:gap-4">
                 <StatCard
                   icon={TrendingUp}
                   label="Total Income"
@@ -125,6 +193,7 @@ const Dashboard = () => {
                   positive={true}
                   color="green"
                   darkMode={darkMode}
+                  isMobile={isMobile}
                 />
                 <StatCard
                   icon={TrendingDown}
@@ -134,31 +203,34 @@ const Dashboard = () => {
                   positive={false}
                   color="red"
                   darkMode={darkMode}
+                  isMobile={isMobile}
                 />
               </div>
             </div>
 
             {/* Quick Actions */}
-            <QuickActions darkMode={darkMode} />
+            <div className="mb-4 md:mb-6">
+              <QuickActions darkMode={darkMode} isMobile={isMobile} />
+            </div>
 
-            {/* Charts Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+            {/* Charts - Responsive Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4 mb-4 md:mb-6">
               <div className="lg:col-span-2">
-                <Analytics spendingData={spendingData} darkMode={darkMode} />
+                <Analytics spendingData={spendingData} darkMode={darkMode} isMobile={isMobile} />
               </div>
               <div className="lg:col-span-1">
-                <Insights darkMode={darkMode} />
+                <Insights darkMode={darkMode} isMobile={isMobile} />
               </div>
             </div>
 
-            {/* Bottom Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* Bottom Grid - Responsive */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4">
               <div className="lg:col-span-2">
-                <Transactions transactions={transactions} darkMode={darkMode} />
+                <Transactions transactions={transactions} darkMode={darkMode} isMobile={isMobile} />
               </div>
-              <div className="lg:col-span-1 space-y-4">
-                <BudgetTracker categoryData={categoryData} darkMode={darkMode} />
-                <PaymentCards darkMode={darkMode} />
+              <div className="lg:col-span-1 space-y-3 md:space-y-4">
+                <BudgetTracker categoryData={categoryData} darkMode={darkMode} isMobile={isMobile} />
+                <PaymentCards darkMode={darkMode} isMobile={isMobile} />
               </div>
             </div>
           </main>

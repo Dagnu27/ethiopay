@@ -12,7 +12,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 
-const Insights = () => {
+const Insights = ({ darkMode, isMobile }) => {
   const insights = [
     {
       icon: Brain,
@@ -51,37 +51,43 @@ const Insights = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.4 }}
-      className="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 h-full"
+      className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-5 border border-gray-100 dark:border-gray-700 h-full"
     >
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-[#14B86A]" />
-          <h3 className="font-semibold text-gray-800 dark:text-white">AI Insights</h3>
+      <div className="flex items-center justify-between mb-3 sm:mb-4">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <Sparkles className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-[#14B86A]`} />
+          <h3 className={`${isMobile ? 'text-sm' : 'text-base'} font-semibold text-gray-800 dark:text-white`}>
+            AI Insights
+          </h3>
         </div>
-        <span className="text-xs bg-[#0E7A4B]/10 text-[#0E7A4B] px-2 py-0.5 rounded-full">
-          Powered by AI
+        <span className={`${isMobile ? 'text-[10px]' : 'text-xs'} bg-[#0E7A4B]/10 text-[#0E7A4B] px-1.5 sm:px-2 py-0.5 rounded-full`}>
+          {isMobile ? 'AI' : 'Powered by AI'}
         </span>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2 sm:space-y-3">
         {insights.map((insight, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
-            className={`p-4 rounded-xl border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all cursor-pointer group`}
+            className={`p-3 sm:p-4 rounded-xl border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all cursor-pointer group`}
           >
-            <div className="flex items-start gap-3">
-              <div className={`p-2 rounded-lg flex-shrink-0 ${getColor(insight.type)}`}>
-                <insight.icon className="w-4 h-4" />
+            <div className="flex items-start gap-2 sm:gap-3">
+              <div className={`p-1.5 sm:p-2 rounded-lg flex-shrink-0 ${getColor(insight.type)}`}>
+                <insight.icon className={`${isMobile ? 'w-3.5 h-3.5' : 'w-4 h-4'}`} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-800 dark:text-white">{insight.title}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{insight.description}</p>
-                <button className="text-xs text-[#0E7A4B] font-medium mt-1.5 flex items-center gap-0.5 group-hover:gap-1 transition-all">
+                <p className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium text-gray-800 dark:text-white`}>
+                  {insight.title}
+                </p>
+                <p className={`${isMobile ? 'text-[10px]' : 'text-xs'} text-gray-500 dark:text-gray-400 mt-0.5`}>
+                  {insight.description}
+                </p>
+                <button className={`${isMobile ? 'text-[10px]' : 'text-xs'} text-[#0E7A4B] font-medium mt-1 sm:mt-1.5 flex items-center gap-0.5 group-hover:gap-1 transition-all`}>
                   {insight.action}
-                  <ArrowRight className="w-3 h-3" />
+                  <ArrowRight className={`${isMobile ? 'w-2.5 h-2.5' : 'w-3 h-3'}`} />
                 </button>
               </div>
             </div>

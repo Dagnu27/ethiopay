@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-const StatCard = ({ icon: Icon, label, value, change, positive, color, darkMode }) => {
+const StatCard = ({ icon: Icon, label, value, change, positive, color, darkMode, isMobile }) => {
   const colors = {
     green: `bg-green-50 text-green-600 ${darkMode ? 'dark:bg-green-900/20 dark:text-green-400' : ''}`,
     red: `bg-red-50 text-red-600 ${darkMode ? 'dark:bg-red-900/20 dark:text-red-400' : ''}`,
@@ -14,18 +14,22 @@ const StatCard = ({ icon: Icon, label, value, change, positive, color, darkMode 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className={`bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}
+      className={`bg-white dark:bg-gray-800 rounded-2xl p-3 sm:p-4 md:p-5 border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}
     >
       <div className="flex items-start justify-between">
-        <div>
-          <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
-          <p className="text-lg font-bold text-gray-800 dark:text-white mt-1">{value}</p>
-          <p className={`text-xs font-medium ${positive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'} mt-1`}>
+        <div className="min-w-0">
+          <p className={`${isMobile ? 'text-[10px]' : 'text-xs sm:text-sm'} text-gray-500 dark:text-gray-400 truncate`}>
+            {label}
+          </p>
+          <p className={`${isMobile ? 'text-sm' : 'text-base sm:text-lg'} font-bold text-gray-800 dark:text-white mt-0.5 truncate`}>
+            {value}
+          </p>
+          <p className={`${isMobile ? 'text-[10px]' : 'text-xs'} font-medium ${positive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'} mt-0.5`}>
             {positive ? '↑' : '↓'} {change}
           </p>
         </div>
-        <div className={`p-3 rounded-xl ${colors[color]}`}>
-          <Icon className="w-5 h-5" />
+        <div className={`p-2 sm:p-3 rounded-xl ${colors[color]} flex-shrink-0`}>
+          <Icon className={`${isMobile ? 'w-3.5 h-3.5' : 'w-4 h-4 sm:w-5 sm:h-5'}`} />
         </div>
       </div>
     </motion.div>
