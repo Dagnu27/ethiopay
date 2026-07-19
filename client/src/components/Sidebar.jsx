@@ -51,6 +51,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
     return location.pathname === path;
   };
 
+  // ✅ Close sidebar on mobile when navigating
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  };
+
   return (
     <>
       {/* Desktop Sidebar */}
@@ -64,7 +71,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
       >
         {/* Logo */}
         <div className={`flex items-center h-16 px-4 border-b border-gray-200 dark:border-gray-700 ${!sidebarOpen ? 'justify-center' : ''}`}>
-          <Link to="/dashboard" className="flex items-center gap-2">
+          <Link to="/dashboard" className="flex items-center gap-2" onClick={handleLinkClick}>
             <div className="w-8 h-8 bg-[#0B7A43] rounded-xl flex items-center justify-center shadow-lg shadow-[#0B7A43]/25 flex-shrink-0">
               <span className="text-white font-bold text-sm">E</span>
             </div>
@@ -80,6 +87,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
             <Link
               key={item.path}
               to={item.path}
+              onClick={handleLinkClick}
               className={`
                 flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group
                 ${isActive(item.path)
@@ -113,6 +121,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
             <Link
               key={item.path}
               to={item.path}
+              onClick={handleLinkClick}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
                 isActive(item.path)
                   ? 'bg-[#0B7A43] text-white shadow-lg shadow-[#0B7A43]/20'
@@ -136,6 +145,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
           <div className={`flex items-center gap-3 w-full ${!sidebarOpen && 'justify-center'}`}>
             <Link
               to="/profile"
+              onClick={handleLinkClick}
               className={`flex items-center gap-3 ${!sidebarOpen ? 'justify-center' : 'flex-1'} hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg p-1.5 transition`}
             >
               <div className="w-9 h-9 rounded-full bg-gradient-to-r from-[#0B7A43] to-[#14B86A] flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
@@ -208,7 +218,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
 
               {/* Logo */}
               <div className="flex items-center h-16 px-4 border-b border-gray-200 dark:border-gray-700">
-                <Link to="/dashboard" className="flex items-center gap-2" onClick={() => setSidebarOpen(false)}>
+                <Link to="/dashboard" className="flex items-center gap-2" onClick={handleLinkClick}>
                   <div className="w-8 h-8 bg-[#0B7A43] rounded-xl flex items-center justify-center shadow-lg shadow-[#0B7A43]/25">
                     <span className="text-white font-bold text-sm">E</span>
                   </div>
@@ -222,7 +232,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
                   <Link
                     key={item.path}
                     to={item.path}
-                    onClick={() => setSidebarOpen(false)}
+                    onClick={handleLinkClick}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
                       isActive(item.path)
                         ? 'bg-[#0B7A43] text-white shadow-lg shadow-[#0B7A43]/20'
@@ -248,7 +258,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
                   <Link
                     key={item.path}
                     to={item.path}
-                    onClick={() => setSidebarOpen(false)}
+                    onClick={handleLinkClick}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${
                       isActive(item.path)
                         ? 'bg-[#0B7A43] text-white shadow-lg shadow-[#0B7A43]/20'
@@ -273,7 +283,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
                   <Link
                     to="/profile"
                     className="flex items-center gap-3 flex-1 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg p-1.5 transition"
-                    onClick={() => setSidebarOpen(false)}
+                    onClick={handleLinkClick}
                   >
                     <div className="w-9 h-9 rounded-full bg-gradient-to-r from-[#0B7A43] to-[#14B86A] flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
                       {user?.fullName?.charAt(0) || 'U'}
